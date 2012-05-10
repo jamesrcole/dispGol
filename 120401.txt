@@ -1,0 +1,684 @@
+
+
+:refactoring
+
+
+- add an Atom class
+
+
+
+:changes to make
+
+
+- with the gliderAndEater animation, and the longer top and bottom arms...  
+  i think the updatesquare is appearing in the wrong position.. it's not 
+  appearing over the top arm hole.
+
+- automatically make the board size whatever fits the atoms *in the current 
+  timestep*.  e.g. in gliderAndEater pattern after time 3 the glider has 
+  disappeared so the top few rows are completely empty....
+
+
+- make the updatesquare and condition square's backgrounds green when 
+  there's a match!
+
+- perhaps it should just highlight the bit of the grid that the hole is 
+  over?  and perhaps also the bit of the bottom grid... that might help 
+  show that it corresponds to it... or perhaps if you have a special colour 
+  for the central cell... and use that for the bottom hole cell???
+
+- the timedisp background is not wide enough if the number of columns is 1 
+  greater than the number of rows... and no doubt in more 'extreme' cases 
+  as well.
+
+- migrate some of the global vars into the dispGol class
+        - note that if you can have mult anims on a page then some of these *can't* be 
+          global vars!
+
+- updateSquare
+
+    - possibly initially draw grid-lines over updateSquare but fade them out on way to 
+      count component or in count component...
+
+
+- probably should set the canvas size as a function of the grid size?
+  though i could hard-code it on a case-by-case basis...
+
+
+- should it have some text saying something like 'showing the first N time steps'.. so the reader 
+  knows what's going on when it ends.
+
+- the count labels in the update square are a bit 'out' now that i've 
+  changed the cellSize.
+
+- sequencer really needs a 'branch'. so i can run something in parallel and 
+  and after the stuff it is running in parallel with has finished then 
+  subsequent items in the seq can run, even if the parallel item hasn't 
+  finished.
+
+- larger outer shadow (on updater and grid area), smaller inner shadow (for pens)
+
+- time moments... as a strip that extends across full width of canvas?
+
+- and them with a fair vert thickness... and below them and udpater what looks 
+  like a deep, nebulous gulf
+
+
+- make it look like there's an inseparable gulf between the top and bottom 
+  grids.
+
+    - bigger shadows to make them look further away from background.
+
+    - have background, of gol universe 'metaverse' being a nebulous purplish colour...  maybe like 
+      mac timemachine thingo.
+      and each grid on a white background raised above background and fuzzy on edges
+
+
+- time/grid area background darker, so doesn't stand out as much.  perhaps 
+  bit immediately underneath grid a bit brighter.
+
+- the labels in the atom condition's in the match component seem to 'jiggle' 
+  around when the updater moves... i wonder if caching would help with that?
+
+- improve count animation
+
+    - highlight the cell whose cell is currently being counted.
+    - get the atom to increase in size without also moving down and to the right.
+
+
+- giving rounded corners to the updater
+
+    instead of drawing lines to each vertex
+    say we're talking about the top-right corner
+    where the line ends at vertex (and say it's a horiz line)
+        lineTo(x-radius,y)
+    then draw the arc
+        arc(x-radius,y-radius)
+    where the line starts at a vertext (and say it's a vert line)
+        moveTo(x,y+radius)
+    ...and the thing is, there's the "direction" the arc needs to be drawn 
+    in.
+
+    ...in principle, i could write a function that takes a bunch of points 
+    describing a path, as well as a radius and the obj to draw on, and 
+    which does all the drawing of the drawOthogonalRoundedPath
+
+    rectangular fill... i think what i'd need to do is draw the entire 
+    updater bounds in a single path and fill that path.
+
+        and i should do a test of that first to make sure that kind of thing works 
+        ok.
+
+- when there's a match or no match in match component
+    - try highlighting holding pen in the appropriate colour.
+    - highlight the counts in the right colour!  after all, these are the things 
+      that it depends on!  you might even one these more stand-out than the other 
+      details you're highlighting.
+      it's possible that you want to highlight the numbers (and not the update 
+      square boundaries) and just slightly after you highlight the numbers 
+      highlight the holding pen.
+
+
+- see if I can have a way of jumping the time forwards so i don't have to wait through all the 
+  animation details when I want to test stuff out (like seeing what happens after it has animated 
+  the details for one timestep).
+
+    - i wonder if you can call Ticker.tick(2000); to jump forwards 2 seconds?
+
+    - and of course the other option would be to use Timeline...
+
+        might be able to use
+
+        setPosition ( value , actionsMode )
+            Advances the timeline to the specified position.
+            value - pos to seek to in milliseconds.
+            actionsMode - Optional parameter specifying how actions are handled. 
+            See Tween.setPosition for more details.
+
+        void tick ( delta )
+            Advances this timeline by the specified amount of time in 
+            milliseconds (or ticks if useTicks is true).
+        
+
+- see if I can have a way of speeding up how fast it does things...
+
+    ...so if you are setting all animations to happen over a duration of a 
+    certain number of milliseconds
+
+    and the ticker is what is counting the number of milliseconds
+
+    well, you could change it so that it updates the number of milliseconds 
+    faster
+
+    ..but what i'm wondering is whether the 'ticks' stuff instead of milliseconds 
+    is meant as a way of doing this?
+
+ - graphics
+   - little arrows on the guidelines showing the direction things will move 
+     ? 
+    
+    - could have new atom pen horiz aligned with count atoms pen, and the down wire 
+      from match component sill coming down from center of that, but then 
+      having another arm that goes to the left to match up with left edge 
+      of new atom pen.
+          
+
+
+
+- calculate the tween duration based on the distance the item has to travel, so that i can ensure 
+  things move at a consistent speed!
+
+
+- use a filter to shade the currently active component blue ? 
+
+
+- [i think now not so important] problem with x pos of updater 
+
+      when i made stuff initially paused and drew things in their inital positions
+      this put the updater at its x pos over the grid rather than off to the side
+
+      how do I fix this? 
+
+      i got it to draw in correct initial position by doing this: 
+
+        ln 2449
+        
+            this.container.x = this.offToSideX;
+
+      but then this stuffs other stuff up... it never moves onto grid but does everything off in 
+      that position to the right...
+
+
+- [not immediate] trying to figure out why the grid active BG is displaying on top of the grid 
+ 
+    see how the active BG is in one of the other cases and see if there's any differences.
+
+    lookingat at CountComponent's activeBG
+
+    constructor:
+
+        this.container = new Container();
+
+        this.activeBG = new Shape();
+        this.activeBG.visible = false;
+        this.container.addChild(this.activeBG);
+
+        this.shape = new Shape();
+        this.container.addChild(this.shape);
+
+    draw()
+
+        draws activeBG
+
+        draws shape
+
+
+    showActiveBGTween
+        var tween;
+        tween = sequencer.getPausedTween(this.activeBG)
+                    .wait(50)
+                    .to({alpha:0,visible:true},50)
+                    .to({alpha:1,visible:true},500)
+                    .wait(50);
+        return tween;
+
+
+    hideActiveBGTween
+        var tween;
+        tween = sequencer.getPausedTween(this.activeBG)
+                    .wait(50)
+                    .to({alpha:0},250)
+                    //.to({visible:false},50)
+        ;
+        return tween;
+
+    in updater constructor
+
+        creates countComponent
+        add's countComponent.container to its container
+
+    in updater's draw function
+
+        this.countComponent.draw();
+        
+
+- bug: if it's a 2x2 grid and TLglider pattern, the atom that should be added in timestep 1 doesn't 
+  appear.  or at least when timestep 1 becomes curr moment it's showing on in updatesquare but not 
+  on grid.
+  
+    i think i know the reason: it's an atom that was, in actuality, put into the grid due to 
+    other atoms that aren't displayed on the truncated grid... but where since we're not 
+    showing that no atom graphic is put onto the displayed grid.  and since we're not 
+    creating a new grid with the next universe state but simply scrolling the bottom one up 
+    you don't see it..
+
+  ...so this one isn't really a problem.
+
+
+
+
+::getting pause/play to work with mult diagrams on the page
+
+
+:::attempt 1 - pausing/playing by adding/removing stage as listener on 
+ticker
+
+-> bloody doesn't work, for reason I was concerned about - it isn't just receving ticks from the 
+ticker that make it go to the next animation frame, it's receiving time information from the ticker 
+and it shows the animation for that moment in time.  So if you pause it 
+
+
+---
+
+these are the changes I made that didn't work
+
+ 
+ 
+-    function PauseScreen(canvas,stage,updaterAnimation) {
++    function PauseScreen(canvas,stage,updaterAnimation,isPaused) {
+ 
+         this.updaterAnimation = updaterAnimation;
+
+==
+
+
+         this.mode = this._PAUSE_MODE;
+ 
++        this.isPaused = isPaused;
++
+         this.container = new Container();
+-        if (!Ticker.getPaused()) { 
++        if (!this.isPaused) { 
+             this.container.visible = false; 
+         } else {
+             this.container.visible = true;
+
+
+==
+
+
+         this.play = function() {
+             this.container.visible = false;
+-            Ticker.setPaused(false);
++            this.isPaused = false;
++            Ticker.addListener(this.stage);
+         }
+ 
+         this.pause = function() {
+             this.container.visible = true;
+-            Ticker.setPaused(true);
++            this.isPaused = true;
++            Ticker.removeListener(this.stage);
+         }
+ 
+         this.pauseAndShowResetScreen = function() {
++            this.pause();
+             this.restartBox.visible = true;
+             this.playButton.visible = false;
+-            this.pause();
+             this.mode = this._RESTART_MODE;
+         }
+ 
+         this.toggle = function() {
+-            if (Ticker.getPaused()) {
++            if (this.isPaused) {
+                 this.play();
+             } else {
+                 this.pause();
+
+==
+
+                this.restartBox.visible = false;
+                this.stage.removeAllChildren();
+                Ticker.removeListener(this.stage);
+-               Ticker.setPaused(false);
+                this.updaterAnimation.cueAnimation();
+            } else {
+                alert("Invalid PauseScreen mode");
+
+
+==
+
+
+
+         this.start = function() {
+-
+-            Ticker.setFPS(25);
+-            Ticker.setPaused(true);
+             this.cueAnimation();
+-
+         }
+
+         this.cueAnimation = function() {
+
+
+==
+
+ 
+             sequencer = new Sequencer();
+ 
+-            pauseScreen = new PauseScreen(this.canvas,stage,this);
++            var paused = true;
++            pauseScreen = new PauseScreen(this.canvas,stage,this,paused);
+ 
+             var universe = new Universe( patterns[this.patternName].clone() );
+ 
+
+==
+
+             stage.addChild(pauseScreen.container);
+ 
+             sequencer.start();
+-
+-            Ticker.addListener(stage,false);
+         }
+
+
+
+==
+
+
+
+         */
+         this.process = function() {
+ 
++            Ticker.setFPS(25);
++            Ticker.setPaused(false);
++            
++
+             $("div.dispGol").each(function() { 
+ 
+                 var dispType = $(this).attr('display');
+
+
+
+---
+
+
+
+    - modify the pausing/playing stuff such that it can handle multiple 
+      diagrams on the page!
+    
+
+      what it currently does:
+
+        - pauses and plays the animation by pausing and playing the Ticker
+        - controls whether the pause screen is shown when it is created by 
+          checking to see whether Ticker is paused or playing.
+        - when user clicks on canvas and it toggles pause/play, it determines
+          current state by checking to see whether Ticker is paused of playing.
+        - when it's in restart mode and the user clicks the canvas, it
+            Ticker.removeListener(this.stage);
+            Ticker.setPaused(false);
+          before cueing the animation again
+        
+    
+      how i think i can modify it
+
+        - the ticker is always running.
+
+        - pause and play the animation by removing the animation's stage as a
+          listener on the Ticker and then adding it back as a listener.
+
+            - since there's no way to check the ticker or stage to see if the
+              stage is registered with the ticker, I think the DispGol class
+              needs a isPaused member
+
+              this.isPaused
+
+        - control whether pause screen is shown in constructor by checking this.isPaused
+        - in toggle, check this.isPaused
+        - in restart mode and user clicks the canvas
+            just do the 
+            Ticker.removeListener(this.stage);
+            **remove the bit that does
+                Ticker.setPaused(false);
+
+
+
+
+        PauseScreen
+        
+            constructor 
+                if (!Ticker.getPaused())
+                    this.container.visible = false; 
+                else
+                    this.container.visible = true;
+
+            play
+                Ticker.setPaused(false);
+
+            pause
+                Ticker.setPaused(true);
+
+            toggle
+                if (Ticker.getPaused())
+                    this.play();
+                else
+                    this.pause();
+
+            canvasClick
+                if (this.mode == this._RESTART_MODE)
+                    this.mode = this._PAUSE_MODE;
+                    this.playButton.visible = true;
+                    this.restartBox.visible = false;
+                    this.stage.removeAllChildren();
+                    Ticker.removeListener(this.stage);
+                    Ticker.setPaused(false);
+                    this.updaterAnimation.cueAnimation();
+
+        UpdaterAnimation
+
+            start
+                Ticker.setFPS(25);
+                Ticker.setPaused(true);
+                this.cueAnimation();
+
+            cueAnimation
+                ..and the end of it:
+                Ticker.addListener(stage,false);
+
+
+
+::notes on extending anim path
+
+ - what about non-movement tweens?  or tweens that involve more 
+   than just movements?  e.g. movements plus making larger or changing 
+   colour or whatever?
+
+        one thing to consier is that the this.nextTween could be 
+        this.nextMovementTween...
+
+        ...ah, but remember that even non-movement tweens still have to 
+        initially position the object in the correct place... so perhaps 
+        there could be this.getNextStartingPosition ? 
+
+        and note also that the tween details sent to .to() are a struct, 
+        and i could potentially have a means to pass arbitrary struct field 
+        names and values into that nextTween funcitona and it could insert 
+        them into that struct. ***
+
+ - case: where the object's position depends on the processing logic, e.g.  
+   the match pulse.. where that originates depends upon where the match pen 
+   is when it gets a match.
+
+
+
+:significantly diff alt ways the diagram/animation could work
+
+
+an initial stage where it 'decomposes' grid to create all the update 
+squares
+followed by the stage where it processes them to create next grid state
+
+    i've got a feeling it's bad that the user can see the overall pattern 
+    while the updating is happening
+
+
+
+
+
+
+
+
+
+
+:-------------
+:poss titles for this animation
+
+- 'An animation of the physics of Conway's Game of Life' 
+- 'Animated illustration of the Game of Life ontology'
+- 'Animation of how the Game of Life universe operates'
+- 'Animation of how the Game of Life rules are applied'
+
+
+
+
+
+:some other GoL code that might get organisational ideas from
+
+
+http://news.ycombinator.com/item?id=3876522
+
+
+
+
+:history of stuff i did
+
+- getting the 'holes' in the arms working so that they cut through the arm to show 
+  what's underneath!
+
+    - make the grid's compositeOperator to 'destination-under'
+      and add it to the stage after the updater
+      
+    - (I think the problem was that when I make the hole shape 
+      'destination-out' it doesn't simply cut out whatever is under it in its 
+      container when it is drawn, it cuts out whatever is underneath it at 
+      the time it is drawn, or whatever it is underneath it on the stage.. in 
+      any case, i think it was cutting out the grid as well.).
+
+
+- I tried doing the following, to try and fix one problem.
+
+    stage.swapChildren(topGrid.container,updater.container);
+
+    ..but for some reason stage.swapChildren is undefined!!
+
+    even though api docs says it should be there.
+
+              
+
+:easel.js docu / tuts to go through
+
+
+Learning HTML5 Canvas with EaselJS
+by markjsb7's channel
+http://www.youtube.com/playlist?list=PL999858F6CC8ECB7E
+
+    think i'm currently up to 4th vid
+
+
+http://vimeo.com/tag:easeljs
+
+
+
+
+http://www.html5gamedevs.com/tag/activetuts/
+http://active.tutsplus.com/tutorials/games/create-a-pong-game-in-html5-with-easeljs-tuts-premium/
+http://www.html5gamedevs.com/tag/tweenjs/
+http://learningthreejs.com/data/tweenjs_for_smooth_animation/docs/tweenjs_for_smooth_animation.html
+http://blogs.adobe.com/creativelayer/2012/02/28/html5-flash-professional/
+http://www.html5canvastutorials.com/
+
+
+
+
+:terminology
+
+one thing I'd like to get clear is concepts/terminology
+the tweens i'm storing
+there is the total tween - that is all of the tweens in that Tween object
+
+there are tween segments
+a sequence of tweens
+
+that start with a pause
+and run one after the other
+and end with a pause
+
+the central timeline controller determines when each tween segment is 
+unpaused - that is, when each tween segment is run
+
+the tween segment following another tween segment in a tween object may run at a much 
+later time after the previous tween segment has completed.
+
+
+
+
+
+:js animation alts
+
+http://coderepos.org/share/wiki/JSTweener
+
+http://tweenjs.com/
+
+
+
+http://raphaeljs.com/
+    js graphics, including putting connectors between objects.
+
+
+:showing descendants / ancestors
+
+
+how about in showing 
+
+    - the causal descendants of an atom
+
+
+    - the causal ancestors of an atom
+
+        - you're effectively showing an upside down tree
+        
+            - the atom will have multiple ancestors in previous moment
+
+            - and each of those will have multiple ancestors in moment 
+              prior to that
+
+            - and so on
+
+        - since there are multiple ancestors in each moment, ideally you 
+          want to indicate which cells each of these descend from (not 
+          just all the ancestors of those, without distinguishing which 
+          descend from which).
+          
+        - how it could look
+
+            - each row is the next timestep
+
+            - in bottom-most row highlight cell to show ancestry for
+
+            - in bottom-1 row, show 3x3 bounding box for that cell, and an 
+              arror from the cell in last row to the bottom corner of the 
+              bounding box... perhaps in the same colour as the bounding 
+              box.
+
+            - repeat the same process for subsequent rows.
+
+            - however for each atom in row N you want a grid diagram 
+              showing its ancestry in row N-1
+
+            - you have a pool of which cell pos 3x3 you have already 
+              created in row N
+                
+                - and you only create a new one if it hasn't already been 
+                  created.
+
+            - for each grid diagram, indicate these details about it
+                - timestep
+                - position of influenceBoxCenter 
+                - it's x and y position in canvas
+
+                
+
+

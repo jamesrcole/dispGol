@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    
+        <title>Game of Life Animation</title>
+
+        <style type="text/css" media="screen">
+            canvas { border: solid black 2px; }
+        </style>
+
+        <script type="text/javascript" src="lib/jquery-1.7.2.js"></script>  
+        <script type="text/javascript" src="lib/prototypes.js"></script>
+        <script type="text/javascript" src="lib/easeljs-0.4.2.min.js"></script>
+        <script type="text/javascript" src="lib/tweenjs-0.2.0.min.js"></script>
+        <script type="text/javascript" src="lib/Ease.js"></script>
+
+        <script type="text/javascript" src="dispGol.js"></script>
+        
+    </head>
+
+    <body>
+
+        <h1>What we normally see of the glider and eater evolution</h1>
+        <p>The following animated gif shows an eater eating gliders over and over again.
+           The eater eats the glider then "repairs" itself.</p>
+        <p><img src="img/Eater5.gif" /></p>
+        <p><small>(<a href="http://conwaylife.com/wiki/Eater">image source</a>)</small></p>
+
+
+        <p>More <a href="http://conwaylife.com/wiki/Eater">information on eaters</a>.</p>
+    
+
+        <br />
+        <br />
+        <br />
+        
+
+        <h1>How the glider and eater evolution actually works</h1>
+        <p>The following animation shows a representation of how the evolution of the pattern works.  It shows the first seven timesteps, and runs for approximately 40 mins.  I don't expect anyone to have the time to watch it all the way through!  I have ideas for how I can make the animations run more quickly.</p>
+        <div class="dispGol" display="updater" 
+            pattern="EaterAndGliderWithGliderCloser" gridWidth="9" 
+            gridHeight="9" steps="7"></div>
+
+    </body>
+</html>
+
