@@ -1,5 +1,5 @@
-dispGol
-=======
+dispGol - display Game of Life animations in webpages
+=====================================================
 
 Include animations of Conway's Game of Life in web-pages.  Instead of showing the usual evolution of the Game of Life board, it shows *how* one state is updated from the previous state.
 
@@ -71,4 +71,9 @@ grids will be.
 
 The `steps` attribute indicates how many steps of the evolution of the 
 Game of Life board to show.
+
+
+Limitations
+-----------
+
 
