@@ -42,8 +42,7 @@ animation to be displayed:
 The `class` and `display` attributes must always be as shown in the 
 example.
 
-The `pattern` indicates which Game of Life pattern to show the updating 
-for.  Presently the following are supported
+The `pattern` attribute indicates which Game of Life pattern to show the updating for.  Presently the following are supported
 
     glider: a [Glider](http://conwaylife.com/wiki/Glider)
 
@@ -65,11 +64,11 @@ for.  Presently the following are supported
 
 These patterns are defined in the global variable `patterns` in dispGol.js. Other patterns can be added by modifying adding their details there.
 
-The `class` and `display` attributes must always be as shown in the 
-example.
+The `gridWidth` attribute indicates how many cells wide the displayed grids will be.
 
+The `gridHeight` attribute indicates how many cells high the displayed 
+grids will be.
 
-         gridWidth="9"
-         gridHeight="9"
-         steps="7">
+The `steps` attribute indicates how many steps of the evolution of the 
+Game of Life board to show.
 
