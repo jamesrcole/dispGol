@@ -1,7 +1,7 @@
 dispGol - display Game of Life animations in webpages
 =====================================================
 
-Include animations of Conway's Game of Life in web-pages.  Instead of showing the usual evolution of the Game of Life board, it shows *how* one state is updated from the previous state.
+Include animations of Conway's Game of Life in web-pages.  Instead of showing the usual evolution of the Game of Life board, it shows *how* the next state is calculated from the current one.
 
 ![](http://github.com/jamesrcole/dispGol/raw/master/img/screenshot.png) 
 
