@@ -11,7 +11,7 @@ The animation is done using the HTML5 canvas.
 Usage
 -----
 
-For examples, see the included files `gliderAnim.html` and `gliderAndEaterAnim.html`.
+For examples, see the included example files `gliderAnim.html` and `gliderAndEaterAnim.html`.
 
 In the HTML file you wish to include the animation in:
 
@@ -46,7 +46,7 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
 
   *  glider: a [Glider](http://conwaylife.com/wiki/Glider)
 
-  *  TLglider: a Glider, but positioned more to the top-left of the grid 
+  *  TLglider: a Glider, but positioned closer to the top-left of the grid 
 
   *  block: a [Block](http://conwaylife.com/wiki/Block) still life.  
 
