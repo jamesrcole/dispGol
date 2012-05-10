@@ -3,7 +3,7 @@ dispGol
 
 Include animations of Conway's Game of Life in web-pages.  Instead of showing the usual evolution of the Game of Life board, it shows *how* one state is updated from the previous state.
 
-![](http://github.com/jamesrcole/dispGol/raw/master/screenshot.png) 
+![](http://github.com/jamesrcole/dispGol/raw/master/img/screenshot.png) 
 
 The animation is done using the HTML5 canvas.  
 
