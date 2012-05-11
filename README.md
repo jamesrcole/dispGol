@@ -78,4 +78,8 @@ Game of Life board to show.
 Limitations
 -----------
 
+  * The animation is only compatible with Firefox and Safari.
+     * It doesn't render properly in Chrome.  Versions of Internet Explorer < 9 don't have canvas support, and while there are workarounds for that I haven't investigated these.  I haven't yet tested it in Internet Explorer 9 or in earlier versions of Firefox or Safari.
 
+  * Only one animation can be included in each HTML page.
+     * Based on my understanding of CreateJS, while the current version of it lets you have multiple independent animations on the one page, there isn't a way to toggle whether an animation is paused/playing without effecting all of the animations on the page.  I imagine this will be addressed soon.

@@ -2,9 +2,7 @@
 
 :refactoring
 
-
 - add an Atom class
-
 
 
 :changes to make
