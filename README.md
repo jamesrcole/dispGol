@@ -7,7 +7,7 @@ Include animations of Conway's Game of Life in web-pages.  Instead of showing th
 
 To see a live example, [click here](http://jamesrcole.github.com/dispGol/).
 
-The animation is done using the HTML5 canvas.  
+The code is pure Javascript and draws the animation on the HTML5 canvas using the [CreateJS](http://createjs.com/) library.  It also makes minor use of [JQuery](http://jquery.com/).
 
 
 Usage
