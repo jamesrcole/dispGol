@@ -1,144 +1,7 @@
 
 
-:refactoring
 
-- add an Atom class
-
-
-:changes to make
-
-
-- with the gliderAndEater animation, and the longer top and bottom arms...  
-  i think the updatesquare is appearing in the wrong position.. it's not 
-  appearing over the top arm hole.
-
-- automatically make the board size whatever fits the atoms *in the current 
-  timestep*.  e.g. in gliderAndEater pattern after time 3 the glider has 
-  disappeared so the top few rows are completely empty....
-
-
-- make the updatesquare and condition square's backgrounds green when 
-  there's a match!
-
-- perhaps it should just highlight the bit of the grid that the hole is 
-  over?  and perhaps also the bit of the bottom grid... that might help 
-  show that it corresponds to it... or perhaps if you have a special colour 
-  for the central cell... and use that for the bottom hole cell???
-
-- the timedisp background is not wide enough if the number of columns is 1 
-  greater than the number of rows... and no doubt in more 'extreme' cases 
-  as well.
-
-- migrate some of the global vars into the dispGol class
-        - note that if you can have mult anims on a page then some of these *can't* be 
-          global vars!
-
-- updateSquare
-
-    - possibly initially draw grid-lines over updateSquare but fade them out on way to 
-      count component or in count component...
-
-
-- probably should set the canvas size as a function of the grid size?
-  though i could hard-code it on a case-by-case basis...
-
-
-- should it have some text saying something like 'showing the first N time steps'.. so the reader 
-  knows what's going on when it ends.
-
-- the count labels in the update square are a bit 'out' now that i've 
-  changed the cellSize.
-
-- sequencer really needs a 'branch'. so i can run something in parallel and 
-  and after the stuff it is running in parallel with has finished then 
-  subsequent items in the seq can run, even if the parallel item hasn't 
-  finished.
-
-- larger outer shadow (on updater and grid area), smaller inner shadow (for pens)
-
-- time moments... as a strip that extends across full width of canvas?
-
-- and them with a fair vert thickness... and below them and udpater what looks 
-  like a deep, nebulous gulf
-
-
-- make it look like there's an inseparable gulf between the top and bottom 
-  grids.
-
-    - bigger shadows to make them look further away from background.
-
-    - have background, of gol universe 'metaverse' being a nebulous purplish colour...  maybe like 
-      mac timemachine thingo.
-      and each grid on a white background raised above background and fuzzy on edges
-
-
-- time/grid area background darker, so doesn't stand out as much.  perhaps 
-  bit immediately underneath grid a bit brighter.
-
-- the labels in the atom condition's in the match component seem to 'jiggle' 
-  around when the updater moves... i wonder if caching would help with that?
-
-- improve count animation
-
-    - highlight the cell whose cell is currently being counted.
-    - get the atom to increase in size without also moving down and to the right.
-
-
-- giving rounded corners to the updater
-
-    instead of drawing lines to each vertex
-    say we're talking about the top-right corner
-    where the line ends at vertex (and say it's a horiz line)
-        lineTo(x-radius,y)
-    then draw the arc
-        arc(x-radius,y-radius)
-    where the line starts at a vertext (and say it's a vert line)
-        moveTo(x,y+radius)
-    ...and the thing is, there's the "direction" the arc needs to be drawn 
-    in.
-
-    ...in principle, i could write a function that takes a bunch of points 
-    describing a path, as well as a radius and the obj to draw on, and 
-    which does all the drawing of the drawOthogonalRoundedPath
-
-    rectangular fill... i think what i'd need to do is draw the entire 
-    updater bounds in a single path and fill that path.
-
-        and i should do a test of that first to make sure that kind of thing works 
-        ok.
-
-- when there's a match or no match in match component
-    - try highlighting holding pen in the appropriate colour.
-    - highlight the counts in the right colour!  after all, these are the things 
-      that it depends on!  you might even one these more stand-out than the other 
-      details you're highlighting.
-      it's possible that you want to highlight the numbers (and not the update 
-      square boundaries) and just slightly after you highlight the numbers 
-      highlight the holding pen.
-
-
-- see if I can have a way of jumping the time forwards so i don't have to wait through all the 
-  animation details when I want to test stuff out (like seeing what happens after it has animated 
-  the details for one timestep).
-
-    - i wonder if you can call Ticker.tick(2000); to jump forwards 2 seconds?
-
-    - and of course the other option would be to use Timeline...
-
-        might be able to use
-
-        setPosition ( value , actionsMode )
-            Advances the timeline to the specified position.
-            value - pos to seek to in milliseconds.
-            actionsMode - Optional parameter specifying how actions are handled. 
-            See Tween.setPosition for more details.
-
-        void tick ( delta )
-            Advances this timeline by the specified amount of time in 
-            milliseconds (or ticks if useTicks is true).
-        
-
-- see if I can have a way of speeding up how fast it does things...
+technical notes on being able to speed stuff up.
 
     ...so if you are setting all animations to happen over a duration of a 
     certain number of milliseconds
@@ -150,24 +13,6 @@
 
     ..but what i'm wondering is whether the 'ticks' stuff instead of milliseconds 
     is meant as a way of doing this?
-
- - graphics
-   - little arrows on the guidelines showing the direction things will move 
-     ? 
-    
-    - could have new atom pen horiz aligned with count atoms pen, and the down wire 
-      from match component sill coming down from center of that, but then 
-      having another arm that goes to the left to match up with left edge 
-      of new atom pen.
-          
-
-
-
-- calculate the tween duration based on the distance the item has to travel, so that i can ensure 
-  things move at a consistent speed!
-
-
-- use a filter to shade the currently active component blue ? 
 
 
 - [i think now not so important] problem with x pos of updater 
@@ -240,19 +85,47 @@
         this.countComponent.draw();
         
 
-- bug: if it's a 2x2 grid and TLglider pattern, the atom that should be added in timestep 1 doesn't 
-  appear.  or at least when timestep 1 becomes curr moment it's showing on in updatesquare but not 
-  on grid.
-  
-    i think i know the reason: it's an atom that was, in actuality, put into the grid due to 
-    other atoms that aren't displayed on the truncated grid... but where since we're not 
-    showing that no atom graphic is put onto the displayed grid.  and since we're not 
-    creating a new grid with the next universe state but simply scrolling the bottom one up 
-    you don't see it..
+Technical notes on giving updater rounded corners
 
-  ...so this one isn't really a problem.
+    instead of drawing lines to each vertex
+    say we're talking about the top-right corner
+    where the line ends at vertex (and say it's a horiz line)
+        lineTo(x-radius,y)
+    then draw the arc
+        arc(x-radius,y-radius)
+    where the line starts at a vertext (and say it's a vert line)
+        moveTo(x,y+radius)
+    ...and the thing is, there's the "direction" the arc needs to be drawn 
+    in.
+
+    ...in principle, i could write a function that takes a bunch of points 
+    describing a path, as well as a radius and the obj to draw on, and 
+    which does all the drawing of the drawOthogonalRoundedPath
+
+    rectangular fill... i think what i'd need to do is draw the entire 
+    updater bounds in a single path and fill that path.
+
+        and i should do a test of that first to make sure that kind of thing works 
+        ok.
 
 
+technical details on being able to jump time forwards
+
+    - i wonder if you can call Ticker.tick(2000); to jump forwards 2 seconds?
+
+    - and of course the other option would be to use Timeline...
+
+        might be able to use
+
+        setPosition ( value , actionsMode )
+            Advances the timeline to the specified position.
+            value - pos to seek to in milliseconds.
+            actionsMode - Optional parameter specifying how actions are handled. 
+            See Tween.setPosition for more details.
+
+        void tick ( delta )
+            Advances this timeline by the specified amount of time in 
+            milliseconds (or ticks if useTicks is true).
 
 
 ::getting pause/play to work with mult diagrams on the page
