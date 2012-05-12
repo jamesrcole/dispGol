@@ -74,6 +74,11 @@ grids will be.
 The `steps` attribute indicates how many steps of the evolution of the 
 Game of Life board to show.
 
+License
+-------
+
+This software is distributed under the [MIT License](http://opensource.org/licenses/MIT).
+
 
 Limitations
 -----------
@@ -149,8 +154,8 @@ Future work
               atom to show it for.
         * similar diagrams, showing 'causal descendance'
      * the current way the updating is shown takes far too long to animate 
-       moderately sized boards - need to have something faster.
-        * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  Here's how I think that could work:
+       even moderately sized boards - need to have something faster.
+        * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  How that could work:
            * show an initial step where the grid is cut up into each of the 
              3x3 squares, and then have a (much simpler) update process 
              shown for each of these
@@ -164,9 +169,9 @@ Future work
              I-II, I-III) just appear one at a time beside the counts, and 
              then slide over it and highlight if they are the same. The 
              idea is to make it easier to see the quantities and easier to 
-             visually reconise when there is a match.  If there's a match 
+             visually recognise when there is a match.  If there's a match 
              make a new atom appear
-           * then at the end 'stictch back together' the pieces to form the 
+           * then at the end 'stitch back together' the pieces to form the 
              grid in the next state.
            * I'd originally been hesitant to show the process in parallel 
              as then the viewer can't see exactly what is going on, but I 
