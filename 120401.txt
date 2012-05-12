@@ -1,7 +1,7 @@
 
 
 
-technical notes on being able to speed stuff up.
+:on being able to speed stuff up.
 
     ...so if you are setting all animations to happen over a duration of a 
     certain number of milliseconds
@@ -15,7 +15,7 @@ technical notes on being able to speed stuff up.
     is meant as a way of doing this?
 
 
-- [i think now not so important] problem with x pos of updater 
+:[i think now not so important] problem with x pos of updater 
 
       when i made stuff initially paused and drew things in their inital positions
       this put the updater at its x pos over the grid rather than off to the side
@@ -32,7 +32,8 @@ technical notes on being able to speed stuff up.
       that position to the right...
 
 
-- [not immediate] trying to figure out why the grid active BG is displaying on top of the grid 
+:[not immediate] trying to figure out why the grid active BG is displaying 
+:on top of the grid 
  
     see how the active BG is in one of the other cases and see if there's any differences.
 
@@ -85,7 +86,7 @@ technical notes on being able to speed stuff up.
         this.countComponent.draw();
         
 
-Technical notes on giving updater rounded corners
+:on giving updater rounded corners
 
     instead of drawing lines to each vertex
     say we're talking about the top-right corner
@@ -109,7 +110,7 @@ Technical notes on giving updater rounded corners
         ok.
 
 
-technical details on being able to jump time forwards
+:being able to jump time forwards
 
     - i wonder if you can call Ticker.tick(2000); to jump forwards 2 seconds?
 
@@ -386,170 +387,52 @@ followed by the stage where it processes them to create next grid state
     while the updating is happening
 
 
+:showing causal decendance/ancestry
 
-
-
-
-
-
-
-
-:-------------
-:poss titles for this animation
-
-- 'An animation of the physics of Conway's Game of Life' 
-- 'Animated illustration of the Game of Life ontology'
-- 'Animation of how the Game of Life universe operates'
-- 'Animation of how the Game of Life rules are applied'
-
+    - the causal descendants of an atom
+    - the causal ancestors of an atom
+        - you're effectively showing an upside down tree
+            - the atom will have multiple ancestors in previous moment
+            - and each of those will have multiple ancestors in moment 
+              prior to that
+            - and so on
+        - since there are multiple ancestors in each moment, ideally you 
+          want to indicate which cells each of these descend from (not just 
+          all the ancestors of those, without distinguishing which descend 
+          from which).
+        - how it could look
+            - each row is the next timestep
+            - in bottom-most row highlight cell to show ancestry for
+            - in bottom-1 row, show 3x3 bounding box for that cell, and an 
+              arror from the cell in last row to the bottom corner of the 
+              bounding box... perhaps in the same colour as the bounding 
+              box.
+            - repeat the same process for subsequent rows.
+            - however for each atom in row N you want a grid diagram 
+              showing its ancestry in row N-1
+            - you have a pool of which cell pos 3x3 you have already 
+              created in row N
+                - and you only create a new one if it hasn't already been 
+                  created.
+            - for each grid diagram, indicate these details about it
+                - timestep
+                - position of influenceBoxCenter 
+                - it's x and y position in canvas
 
 
 
 
 :some other GoL code that might get organisational ideas from
 
-
 http://news.ycombinator.com/item?id=3876522
-
-
-
-
-:history of stuff i did
-
-- getting the 'holes' in the arms working so that they cut through the arm to show 
-  what's underneath!
-
-    - make the grid's compositeOperator to 'destination-under'
-      and add it to the stage after the updater
-      
-    - (I think the problem was that when I make the hole shape 
-      'destination-out' it doesn't simply cut out whatever is under it in its 
-      container when it is drawn, it cuts out whatever is underneath it at 
-      the time it is drawn, or whatever it is underneath it on the stage.. in 
-      any case, i think it was cutting out the grid as well.).
-
-
-- I tried doing the following, to try and fix one problem.
-
-    stage.swapChildren(topGrid.container,updater.container);
-
-    ..but for some reason stage.swapChildren is undefined!!
-
-    even though api docs says it should be there.
 
               
 
-:easel.js docu / tuts to go through
+:poss titles for this animation
 
-
-Learning HTML5 Canvas with EaselJS
-by markjsb7's channel
-http://www.youtube.com/playlist?list=PL999858F6CC8ECB7E
-
-    think i'm currently up to 4th vid
-
-
-http://vimeo.com/tag:easeljs
-
-
-
-
-http://www.html5gamedevs.com/tag/activetuts/
-http://active.tutsplus.com/tutorials/games/create-a-pong-game-in-html5-with-easeljs-tuts-premium/
-http://www.html5gamedevs.com/tag/tweenjs/
-http://learningthreejs.com/data/tweenjs_for_smooth_animation/docs/tweenjs_for_smooth_animation.html
-http://blogs.adobe.com/creativelayer/2012/02/28/html5-flash-professional/
-http://www.html5canvastutorials.com/
-
-
-
-
-:terminology
-
-one thing I'd like to get clear is concepts/terminology
-the tweens i'm storing
-there is the total tween - that is all of the tweens in that Tween object
-
-there are tween segments
-a sequence of tweens
-
-that start with a pause
-and run one after the other
-and end with a pause
-
-the central timeline controller determines when each tween segment is 
-unpaused - that is, when each tween segment is run
-
-the tween segment following another tween segment in a tween object may run at a much 
-later time after the previous tween segment has completed.
-
-
-
-
-
-:js animation alts
-
-http://coderepos.org/share/wiki/JSTweener
-
-http://tweenjs.com/
-
-
-
-http://raphaeljs.com/
-    js graphics, including putting connectors between objects.
-
-
-:showing descendants / ancestors
-
-
-how about in showing 
-
-    - the causal descendants of an atom
-
-
-    - the causal ancestors of an atom
-
-        - you're effectively showing an upside down tree
-        
-            - the atom will have multiple ancestors in previous moment
-
-            - and each of those will have multiple ancestors in moment 
-              prior to that
-
-            - and so on
-
-        - since there are multiple ancestors in each moment, ideally you 
-          want to indicate which cells each of these descend from (not 
-          just all the ancestors of those, without distinguishing which 
-          descend from which).
-          
-        - how it could look
-
-            - each row is the next timestep
-
-            - in bottom-most row highlight cell to show ancestry for
-
-            - in bottom-1 row, show 3x3 bounding box for that cell, and an 
-              arror from the cell in last row to the bottom corner of the 
-              bounding box... perhaps in the same colour as the bounding 
-              box.
-
-            - repeat the same process for subsequent rows.
-
-            - however for each atom in row N you want a grid diagram 
-              showing its ancestry in row N-1
-
-            - you have a pool of which cell pos 3x3 you have already 
-              created in row N
-                
-                - and you only create a new one if it hasn't already been 
-                  created.
-
-            - for each grid diagram, indicate these details about it
-                - timestep
-                - position of influenceBoxCenter 
-                - it's x and y position in canvas
-
-                
+- 'An animation of the physics of Conway's Game of Life' 
+- 'Animated illustration of the Game of Life ontology'
+- 'Animation of how the Game of Life universe operates'
+- 'Animation of how the Game of Life rules are applied'
 
 
