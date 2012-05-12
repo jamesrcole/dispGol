@@ -129,6 +129,27 @@ Future work
         * currently it's hard-coded.  It should be a function of the grid-size.
      * possibly get it to display information about what it is showing, e.g. 'showing first N time steps'.
      * add a 'branch' operation to the sequencer, enabling tweens to run in parallel to the "mainline" tweens.  In the normal sequence, the current tweens must finish before the following tweens can start, but the tween on a branch run would run independently on this and there would be no tween depending on them to finish before they could start.
+
+  * planned future features
+     * choose from a library of patterns which one to show evolution of 
+     * interactively draw patterns
+     * paste in pattern definitions in the standard formats (RLE etc)
+     * a suite of different ways to show patterns and pattern evolution, 
+       e.g.
+        * show animations of the ordinary evolution of a pattern (i.e.  
+          without showing how the next states are calculated).
+        * show a static diagram that lays out, one after the other 
+          (spatially), a number of steps in the evolution of a pattern.
+        * diagrams showing 'causal ancestry'
+            * that staticaly show show a number of steps in the evolution 
+              of a pattern, but which also let the user see atoms in 
+              earlier moments are causal ancestors of an atom in a given 
+              moment.  It could statically show this ancestry for a given 
+              atom, or let the user interactively choose the particular 
+              atom to show it for.
+        * similar diagrams, showing 'causal descendance'
+
+
      
   * to fix
      * when it is displaying a larger grid, e.g. the 'gliderAndEater' animation, the updater arms are longer and it looks as if the updateSquare is appearing to the right of the hole where it should appear.
