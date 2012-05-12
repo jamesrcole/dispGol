@@ -94,7 +94,7 @@ Future work
 -----------
 
 
-  * possible enhancements to make nature animation clearer
+  * possible enhancements to make meaning of the animation clearer
      * make matches more prominent
         * try making the updateSquare and the matching condition's backgrounds turn green when there's a match.
         * could also highlight the counts.  After all, they are what determine whether there is a match or not.
@@ -148,8 +148,32 @@ Future work
               atom, or let the user interactively choose the particular 
               atom to show it for.
         * similar diagrams, showing 'causal descendance'
-
-
+     * the current way the updating is shown takes far too long to animate 
+       moderately sized boards - need to have something faster.
+        * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  Here's how I think that could work:
+           * show an initial step where the grid is cut up into each of the 
+             3x3 squares, and then have a (much simpler) update process 
+             shown for each of these
+           * in the count process, show a '0' for no atom and a tally mark 
+             for each atom, and show these directly beside the 3x3 grid (to 
+             more easily see the relationship between the counts and the 
+             grid contents)
+             The central count in top half of square beside 3x3 grid, the 
+             catchment count in bottom half.
+           * then for the match process, just make each condition (0-III, 
+             I-II, I-III) just appear one at a time beside the counts, and 
+             then slide over it and highlight if they are the same. The 
+             idea is to make it easier to see the quantities and easier to 
+             visually reconise when there is a match.  If there's a match 
+             make a new atom appear
+           * then at the end 'stictch back together' the pieces to form the 
+             grid in the next state.
+           * I'd originally been hesitant to show the process in parallel 
+             as then the viewer can't see exactly what is going on, but I 
+             think it's probably ok as long as it is fully clear that all 
+             of the updating is just happening via that simple process 
+             operating on the 3x3 squares.
+       
      
   * to fix
      * when it is displaying a larger grid, e.g. the 'gliderAndEater' animation, the updater arms are longer and it looks as if the updateSquare is appearing to the right of the hole where it should appear.
@@ -169,7 +193,10 @@ Future work
 Change history
 --------------
 
+Current version 0.1
 
+  * 0.1
+     * really messy code: it started out just drawing static diagrams but then I realised an animation would be the best way to present the information so it evolved in that direction.  Having never done graphics/animation before, learnt how the drawing/animation library worked as I was writing the code, so it wasn't clear how to organise things as I was going along.
 
 
 
