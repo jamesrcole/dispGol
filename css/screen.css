@@ -1,0 +1,45 @@
+canvas { border: solid black 2px; }
+body { 
+    margin: auto;
+    padding-top: 3em;
+    padding-bottom: 3em;
+    width:50em;
+    background-image: url(../img/subtle_textured_light_blue_background.jpg);
+    background-repeat: repeat;
+}
+h1 { 
+    margin-top: 1.5em;
+    margin-bottom: 1.3em; 
+    color: white;
+}
+h2 { 
+    margin-top: 1.5em;
+    margin-bottom: 1.3em; 
+    color: white;
+}
+h3 { 
+    margin-top: 1em;
+    margin-bottom: 1em; 
+    color: white;
+}
+h4 { 
+    margin-top: 1em;
+    margin-bottom: 1em; 
+    color: white;
+}
+p { 
+    width: 35em;
+    line-height: 170%;
+    font-size: 120%;
+    color: cornsilk;
+}
+a:visited {
+    color: DodgerBlue;
+}
+.dispGol { 
+    margin:auto; 
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+}
+
+
