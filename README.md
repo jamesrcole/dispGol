@@ -98,7 +98,7 @@ Limitations
 Future work
 -----------
 
-
+  * everything that happens when there's a match (to do with result pulse and new atom moving onto bottom grid) is too slow relative to the rest of the animation - speed it up.
   * possible enhancements to make meaning of the animation clearer
      * make matches more prominent
         * try making the updateSquare and the matching condition's backgrounds turn green when there's a match.
