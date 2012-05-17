@@ -139,6 +139,8 @@ Future work
      * choose from a library of patterns which one to show evolution of 
      * interactively draw patterns
      * paste in pattern definitions in the standard formats (RLE etc)
+     * ability to restart animation while it's in progress (for if viewer gets distracted and misses a bit or other such reasons).
+     * have a 'timeline' like youtube videos do (the red band down the bottom of them), showing length of animation, how much time has currently elapsed and the ability to jump to any point along that timeline.
      * a suite of different ways to show patterns and pattern evolution, 
        e.g.
         * show animations of the ordinary evolution of a pattern (i.e.  
@@ -153,8 +155,8 @@ Future work
               atom, or let the user interactively choose the particular 
               atom to show it for.
         * similar diagrams, showing 'causal descendance'
-     * the current way the updating is shown takes far too long to animate 
-       even moderately sized boards - need to have something faster.
+     * a completely different type of animation that shows the updates for each cell in parallel.
+        * the current way the updating is shown takes far too long to animate even moderately sized boards - need to have something faster.
         * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  How that could work:
            * show an initial step where the grid is cut up into each of the 
              3x3 squares, and then have a (much simpler) update process 
@@ -178,6 +180,7 @@ Future work
              think it's probably ok as long as it is fully clear that all 
              of the updating is just happening via that simple process 
              operating on the 3x3 squares.
+           * allow the user to scroll back to see the full history of the grids and update calculations at each step.
        
      
   * to fix
