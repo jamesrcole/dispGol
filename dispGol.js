@@ -1280,7 +1280,10 @@ Notes:
 
         this.x = threeSquareX - this.armPadding;
         this.rightPadding = cellSize * 3;
-        this.width = this.armPadding + gridWidth + this.rightPadding;
+        // The cellSize/4 is so, on large grids, the left edge of updater body
+        // doesn't sit flush with grid lines, which i think is a little 
+        // aesthetically unpleasing.
+        this.width = this.armPadding + cellSize*5 + this.rightPadding + cellSize/4;
         this.x2 = this.x + this.width;
         this.y = threeSquareY - this.armPadding;
         this.height = this.threeSquareWidth + (this.armPadding * 2);
@@ -2683,7 +2686,7 @@ Notes:
         this.fillColour = "lightgray";
         this.innerBoundaryColour = "DimGray";
 
-        this.alpha = 0.9;
+        this.alpha = 0.97;
 
         this.roundedCnrRadius = this.cellSize/2;
 
