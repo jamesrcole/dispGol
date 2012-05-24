@@ -13,7 +13,7 @@ The code is pure Javascript and draws the animation on the HTML5 canvas using th
 Usage
 -----
 
-For examples, see the included example files `gliderAnim.html` and `gliderAndEaterAnim.html`.
+For examples, see the included HTML files (`glider.html`, `gliderAndEater.html` etc).
 
 In the HTML file you wish to include the animation in:
 
