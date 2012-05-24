@@ -46,23 +46,25 @@ example.
 
 The `pattern` attribute indicates which Game of Life pattern to show the updating for.  Presently the following are supported
 
-  *  glider: a [Glider](http://conwaylife.com/wiki/Glider)
-
-  *  TLglider: a Glider, but positioned closer to the top-left of the grid 
-
-  *  block: a [Block](http://conwaylife.com/wiki/Block) still life.  
-
-  *  tub: a [Tub](http://conwaylife.com/wiki/Tub) still life.
-
-  *  beehive: a [Beehive](http://conwaylife.com/wiki/Beehive) still life
-
-  *  blinker: a [Blinker](http://conwaylife.com/wiki/Blinker) oscillator
-
-  *  LWSS: a [Lightweight spaceship](http://conwaylife.com/wiki/LWSS).  
-
-  *  EaterAndGlider: an [Eater 5](http://conwaylife.com/wiki/Eater_5), eating a glider 
-
-  *  EaterAndGliderWithGliderCloser: the same as the above, but with the glider starting a bit closer to the eater.
+  * still lifes
+      * `block`: a [Block](http://conwaylife.com/wiki/Block) still life.  
+      * `tub`: a [Tub](http://conwaylife.com/wiki/Tub) still life.
+      * `beehive`: a [Beehive](http://conwaylife.com/wiki/Beehive) still life.
+  * oscillators
+      * `blinker`: a [Blinker](http://conwaylife.com/wiki/Blinker) oscillator
+  * spaceships
+      * `glider`: a [Glider](http://conwaylife.com/wiki/Glider)
+      * `TLglider`: a Glider, but positioned closer to the top-left of the grid 
+      * `LWSS`: a [Lightweight spaceship](http://conwaylife.com/wiki/LWSS).  
+  * guns
+      * `GosperGliderGun`: a [Gosper Glider Gun](http://conwaylife.com/wiki/Gosper_glider_gun)
+  * interacting patterns
+      * `EaterAndGlider`: an [Eater 5](http://conwaylife.com/wiki/Eater_5), eating a glider 
+      * `EaterAndGliderWithGliderCloser`: the same as the above, but with the glider starting a bit closer to the eater.
+  * some examples of patterns that just "disintegrate" into nothing
+      * `disintegratingPattern1`
+      * `disintegratingPattern2`
+      * `disintegratingPattern3`
 
 These patterns are defined in the global variable `patterns` in dispGol.js. Other patterns can be added by modifying adding their details there.
 
