@@ -209,9 +209,64 @@ Notes:
     var offBottomOfScreenTimeDispY;
 
 
+    function Pattern(pattern) {
+
+        this.patternPosArray = null;
+        this.patternRLE = null;
+
+        /**
+            Pattern in RLE format or a PosArray.  It auto determines
+            which and loads it.
+        */
+        this.setPattern = function(pattern) {
+            var isPosArray = Array.isArray(pattern);
+            if ( isPosArray ) {
+                this.setPattern_PosArray(pattern);
+            } else { // assume RLE
+                this.setPattern_RLE(pattern);
+            }
+        }
+
+
+        // sets the RLE _and_ calculates the pos array from it
+        this.setPattern_RLE = function(pattern) {
+            this.patternRLE = pattern;
+            this.calculatePosArray(pattern);
+        }
+
+        /*
+            ***initially handle cases without comment lines, an without header line
+        */
+        this.calculatePosArray = function(patternRLE) {
+
+
+        }
+
+        this.setPattern_PosArray = function(pattern) {
+            this.patternPosArray = pattern.clone();
+        }
+
+        this.getPattern_PosArray = function() {
+            return this.patternPosArray;
+        }
+
+        // NOTE: only returns the RLE if it was explicitly set!
+        //       otherwise it will return null.
+        this.getPattern_RLE = function() {
+            return this.patternRLE;
+        }
+
+
+        // the constructor sets the pattern. have to put it down here after funcs
+        // it uses have been defined
+        this.setPattern(pattern);
+
+    }
+
+
     var patterns = {
 
-        test:    [ [1,0], [3,0], [4,0], [0,1], [1,1], [3,1], [4,1] ],
+        test: new Pattern([ [1,0], [3,0], [4,0], [0,1], [1,1], [3,1], [4,1] ]),
 
         /*
              oo
@@ -221,7 +276,7 @@ Notes:
              o
         and then disappears
          */
-        disintegratingPattern1: [ [1,0], [2,0], [0,1] ],
+        disintegratingPattern1: new Pattern([ [1,0], [2,0], [0,1] ]),
 
         /*
              o
@@ -231,7 +286,7 @@ Notes:
               o
         and then disappears
         */
-        disintegratingPattern2: [ [0,0], [1,1], [2,2] ],
+        disintegratingPattern2: new Pattern([ [0,0], [1,1], [2,2] ]),
 
         /*
                oo
@@ -245,24 +300,24 @@ Notes:
 
         then disappears
         */
-        disintegratingPattern3: [ [0,0], [1,0], [2,1], [0,2] ],
+        disintegratingPattern3: new Pattern([ [0,0], [1,0], [2,1], [0,2] ]),
 
 
-        glider:  [ [3,1], [3,2], [3,3], [2,3], [1,2] ],
+        glider:  new Pattern([ [3,1], [3,2], [3,3], [2,3], [1,2] ]),
 
-        TLglider: [ [2,0], [2,1], [2,2], [1,2], [0,1] ],
+        TLglider: new Pattern([ [2,0], [2,1], [2,2], [1,2], [0,1] ]),
 
-        block:   [ [1,1], [2,1], [1,2], [2,2] ],
+        block:   new Pattern([ [1,1], [2,1], [1,2], [2,2] ]),
 
-        tub:     [ [1,0], [0,1], [2,1], [1,2] ],
+        tub:     new Pattern([ [1,0], [0,1], [2,1], [1,2] ]),
 
-        beehive: [ [2,1], [3,1], [1,2], [4,2], [2,3], [3,3] ],
+        beehive: new Pattern([ [2,1], [3,1], [1,2], [4,2], [2,3], [3,3] ]),
 
-        blinker: [ [1,0], [1,1], [1,2] ],
+        blinker: new Pattern([ [1,0], [1,1], [1,2] ]),
 
-        LWSS:    [ [0,0], [3,0], [4,1], [0,2], [4,2], [1,3], [2,3], [3,3], [4,3] ],
+        LWSS:    new Pattern([ [0,0], [3,0], [4,1], [0,2], [4,2], [1,3], [2,3], [3,3], [4,3] ]),
 
-        EaterAndGlider: [ 
+        EaterAndGlider: new Pattern([ 
             // the glider
             [3,0], [3,1], [5,1], [3,2], [4,2],
 
@@ -274,9 +329,9 @@ Notes:
 
             // the eater tail
             [1,7], [1,8], [0,9], [1,9]
-        ],
+        ]),
 
-        EaterAndGliderWithGliderCloser: [ 
+        EaterAndGliderWithGliderCloser: new Pattern([ 
             // the glider
             [2,0], [4,0], [2,1], [3,1], [3,2],
 
@@ -288,9 +343,9 @@ Notes:
 
             // the eater tail
             [1,6], [1,7], [0,8], [1,8]
-        ],
+        ]),
 
-        GosperGliderGun: [ 
+        GosperGliderGun: new Pattern([ 
 
             // left block
             [0,4], [1,4], [0,5], [1,5],
@@ -310,7 +365,7 @@ Notes:
             // right parts of right QB
             [24,0], [24,1], [24,5], [24,6] 
 
-        ]
+        ])
 
 
     };
@@ -3461,7 +3516,7 @@ Notes:
 
             pauseScreen = new PauseScreen(this.canvas,stage,this);
 
-            var universe = new Universe( patterns[this.patternName].clone() );
+            var universe = new Universe( patterns[this.patternName].getPattern_PosArray().clone() );
 
             this.cueUpdatingAnimation(stage,universe);
 
