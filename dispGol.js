@@ -406,7 +406,9 @@ Notes:
 
         Octagon2: new Pattern('3b2o3b$2bo2bo2b$bo4bob$o6bo$o6bo$bo4bob$2bo2bo2b$3b2o!'),
 
-        QueenBeeShuttle: new Pattern('9bo12b$7bobo12b$6bobo13b$2o3bo2bo11b2o$2o4bobo11b2o$7bobo12b$9bo!')
+        QueenBeeShuttle: new Pattern('9bo12b$7bobo12b$6bobo13b$2o3bo2bo11b2o$2o4bobo11b2o$7bobo12b$9bo!'),
+
+        Pulsar: new Pattern('2b3o3b3o2b2$o4bobo4bo$o4bobo4bo$o4bobo4bo$2b3o3b3o2b2$2b3o3b3o2b$o4bob o4bo$o4bobo4bo$o4bobo4bo2$2b3o3b3o!')
 
     };
 
