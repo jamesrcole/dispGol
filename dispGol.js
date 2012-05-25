@@ -408,7 +408,12 @@ Notes:
 
         QueenBeeShuttle: new Pattern('9bo12b$7bobo12b$6bobo13b$2o3bo2bo11b2o$2o4bobo11b2o$7bobo12b$9bo!'),
 
-        Pulsar: new Pattern('2b3o3b3o2b2$o4bobo4bo$o4bobo4bo$o4bobo4bo$2b3o3b3o2b2$2b3o3b3o2b$o4bob o4bo$o4bobo4bo$o4bobo4bo2$2b3o3b3o!')
+        Pulsar: new Pattern('2b3o3b3o2b2$o4bobo4bo$o4bobo4bo$o4bobo4bo$2b3o3b3o2b2$2b3o3b3o2b$o4bob o4bo$o4bobo4bo$o4bobo4bo2$2b3o3b3o!'),
+
+        // requires a 16 x 19 grid to display its evolution properly
+        Pentadecathlon: new Pattern('3$3b2bo4bo2b$3b2ob4ob2o$3b2bo4bo!'),
+
+        KickbackReaction: new Pattern('5bo$6b2o$b2o2b2o$obo$2bo!')
 
     };
 
