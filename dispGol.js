@@ -241,6 +241,10 @@ Notes:
         */
         this.calculatePosArray = function(patternRLE) {
 
+            /*
+              RLE format requires patternRLE to end with a '!'.  We'll let this be optional
+            */
+
             var currRow = 0;
             var currCol = 0;   // col the _next_ item will go into
             var strPos = 0;    // curr pos within RLE string
@@ -248,7 +252,7 @@ Notes:
             var numberOf = 1;
             var numPatt = /\d+/g;
             var whitespacePatt = /\s+/g;
-            while ( c != '!' ) {
+            while ( c != '!' && c != '' ) {
                 // first two cases are potentially processing multiple characters
                 if ( numPatt.test(c) ) {
                     numPatt.lastIndex = strPos;
