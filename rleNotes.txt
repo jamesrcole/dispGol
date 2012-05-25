@@ -14,44 +14,6 @@ bo$2bo$3o!
 
 
 
--> input rleString
-
-
-pattern = [ ];
-currRow = 0;
-currCol = 0;   // col the _next_ item will go into
-strPos = 0;    // curr pos within RLE string
-c = rleString.charAt(strPos);
-numberOf = 1;
-while ( c != '!' ) {
-    if (c == '\d') {
-        var patt = /\d+/g;
-        patt.lastIndex = strPos;
-        var numString = patt.exec(rleString);
-        numberOf = 0 + numString;
-        strPos += numString.length;
-    *** UP TO HERE ****
-    } else if (c == any whitespace incl newlines) {
-        consume all of the whitespace;
-        strPos =;
-    } else {
-        if (c == 'b') {
-            currCol += numberOf;
-        } else if (c == 'o') {
-            var endPt = currCol + numberOf;
-            for (; currCol < endPt; currCol++) {
-                pattern.append( [ currRow, currCol ] );
-            }
-        } elseif (c == '$') {
-            currRow++;
-        }
-        numberOf = 1;
-        strPos++;
-    }
-    c = rleString.charAt(strPos);
-}             
-        
-
 
 
     

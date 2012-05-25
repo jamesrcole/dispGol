@@ -211,7 +211,7 @@ Notes:
 
     function Pattern(pattern) {
 
-        this.patternPosArray = null;
+        this.patternPosArray = [];
         this.patternRLE = null;
 
         /**
@@ -236,11 +236,48 @@ Notes:
 
         /*
             ***initially handle cases without comment lines, an without header line
+
+            Details of RLE format: http://conwaylife.com/wiki/Run_Length_Encoded
         */
         this.calculatePosArray = function(patternRLE) {
 
-
+            var currRow = 0;
+            var currCol = 0;   // col the _next_ item will go into
+            var strPos = 0;    // curr pos within RLE string
+            var c = patternRLE.charAt(strPos);
+            var numberOf = 1;
+            var numPatt = /\d+/g;
+            var whitespacePatt = /\s+/g;
+            while ( c != '!' ) {
+                // first two cases are potentially processing multiple characters
+                if ( numPatt.test(c) ) {
+                    numPatt.lastIndex = strPos;
+                    var numString = numPatt.exec(patternRLE)[0];
+                    numberOf = parseInt(numString);
+                    strPos += numString.length;
+                } else if ( whitespacePatt.test(c) ) {
+                    whitespacePatt.lastIndex = strPos;
+                    strPos += whitespacePatt.exec(patternRLE)[0].length;
+                } else {
+                // processing a single character of RLE
+                    if (c == 'b') {
+                        currCol += numberOf;
+                    } else if (c == 'o') {
+                        var endPt = currCol + numberOf;
+                        for ( ; currCol < endPt; currCol++) {
+                            this.patternPosArray.push( [currCol,currRow] );
+                        }
+                    } else if (c == '$') {
+                        currRow++;
+                        currCol = 0;
+                    }
+                    numberOf = 1;
+                    strPos++;
+                }
+                c = patternRLE.charAt(strPos);
+            }
         }
+
 
         this.setPattern_PosArray = function(pattern) {
             this.patternPosArray = pattern.clone();
@@ -365,8 +402,11 @@ Notes:
             // right parts of right QB
             [24,0], [24,1], [24,5], [24,6] 
 
-        ])
+        ]),
 
+        Octagon2: new Pattern('3b2o3b$2bo2bo2b$bo4bob$o6bo$o6bo$bo4bob$2bo2bo2b$3b2o!'),
+
+        QueenBeeShuttle: new Pattern('9bo12b$7bobo12b$6bobo13b$2o3bo2bo11b2o$2o4bobo11b2o$7bobo12b$9bo!')
 
     };
 
