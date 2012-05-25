@@ -52,6 +52,9 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
       * `beehive`: a [Beehive](http://conwaylife.com/wiki/Beehive) still life.
   * oscillators
       * `blinker`: a [Blinker](http://conwaylife.com/wiki/Blinker) oscillator
+      * `Pulsar`: a [Pulsar](http://conwaylife.com/wiki/Pulsar) oscillator.
+      * `Pentadecathlon`: a [Pentadecathlon](http://conwaylife.com/wiki/Pentadecathlon) oscillator.
+      * `Octagon2`: an [Octagon 2](http://conwaylife.com/wiki/Octagon_2) oscillator.
   * spaceships
       * `glider`: a [Glider](http://conwaylife.com/wiki/Glider)
       * `TLglider`: a Glider, but positioned closer to the top-left of the grid 
@@ -61,6 +64,8 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
   * interacting patterns
       * `EaterAndGlider`: an [Eater 5](http://conwaylife.com/wiki/Eater_5), eating a glider 
       * `EaterAndGliderWithGliderCloser`: the same as the above, but with the glider starting a bit closer to the eater.
+      * `QueenBeeShuttle`: a [Queen Bee Shuttle](http://conwaylife.com/wiki/Queen_bee_shuttle)
+      * `KickbackReaction`: a [Kickback Reaction](http://conwaylife.com/wiki/Kickback_reaction)
   * some examples of patterns that just "disintegrate" into nothing
       * `disintegratingPattern1`
       * `disintegratingPattern2`
