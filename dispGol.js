@@ -268,7 +268,7 @@ Notes:
                             this.patternPosArray.push( [currCol,currRow] );
                         }
                     } else if (c == '$') {
-                        currRow++;
+                        currRow += numberOf;
                         currCol = 0;
                     }
                     numberOf = 1;
