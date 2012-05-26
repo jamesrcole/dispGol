@@ -418,7 +418,22 @@ Notes:
         // requires a 16 x 19 grid to display its evolution properly
         Pentadecathlon: new Pattern('3$3b2bo4bo2b$3b2ob4ob2o$3b2bo4bo!'),
 
-        KickbackReaction: new Pattern('5bo$6b2o$b2o2b2o$obo$2bo!')
+        KickbackReaction: new Pattern('5bo$6b2o$b2o2b2o$obo$2bo!'),
+
+        /*
+        P60 relay (two pentadecathlons and a glider.)
+            ...........................O....O..
+            ................OO.......OO.OOOO.OO
+            .................OO........O....O..
+            ................O..................
+            ..O....O...........................
+            OO.OOOO.OO.........................
+            ..O....O...........................
+        requires being centered in a 41 x 13 grid to display its evolution properly
+        */
+        P60Relay: 
+            new Pattern('3$3b27bo4bo$3b16b2o7b2ob4ob2o$3b17b2o8bo4bo$3b16bo$3b2bo4bo$3b2ob4ob2o$3b2bo4bo!')
+            
 
     };
 

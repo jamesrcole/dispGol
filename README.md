@@ -66,6 +66,7 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
       * `EaterAndGliderWithGliderCloser`: the same as the above, but with the glider starting a bit closer to the eater.
       * `QueenBeeShuttle`: a [Queen Bee Shuttle](http://conwaylife.com/wiki/Queen_bee_shuttle)
       * `KickbackReaction`: a [Kickback Reaction](http://conwaylife.com/wiki/Kickback_reaction)
+      * `P60Relay`: a glider shuttling between two pentadecathlons.
   * some examples of patterns that just "disintegrate" into nothing
       * `disintegratingPattern1`
       * `disintegratingPattern2`
