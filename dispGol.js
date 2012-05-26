@@ -432,7 +432,17 @@ Notes:
         requires being centered in a 41 x 13 grid to display its evolution properly
         */
         P60Relay: 
-            new Pattern('3$3b27bo4bo$3b16b2o7b2ob4ob2o$3b17b2o8bo4bo$3b16bo$3b2bo4bo$3b2ob4ob2o$3b2bo4bo!')
+            new Pattern('3$3b27bo4bo$3b16b2o7b2ob4ob2o$3b17b2o8bo4bo$3b16bo$3b2bo4bo$3b2ob4ob2o$3b2bo4bo!'),
+
+        /*
+        Pentadecathlon glider synthesis
+        needs a bounding box of 16 x 9
+        show 29 steps
+        http://www.ericweisstein.com/encyclopedias/life/GliderSynthesis.html
+        http://conwaylife.com/wiki/Pentadecathlon
+        */
+        GliderSynthesisPentadecathlon: new Pattern('6bo$6bobo$6b2o2$3o$2bo$bo5b2o$8b2o$7bo!')
+
             
 
     };

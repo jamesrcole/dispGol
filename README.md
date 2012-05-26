@@ -71,6 +71,8 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
       * `disintegratingPattern1`
       * `disintegratingPattern2`
       * `disintegratingPattern3`
+  * [glider synthesis](http://conwaylife.com/wiki/Glider_synthesis)
+      * `GliderSynthesisPentadecathlon`: glider synthesis of a [Pentadecathlon](http://conwaylife.com/wiki/Pentadecathlon). 
 
 These patterns are defined in the global variable `patterns` in dispGol.js. Other patterns can be added by modifying adding their details there.
 
