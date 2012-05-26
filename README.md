@@ -96,6 +96,9 @@ Limitations
   * Only one animation can be included in each HTML page.
      * Based on my understanding of CreateJS, while the current version of it lets you have multiple independent animations on the one page, there isn't a way to toggle whether an animation is paused/playing without effecting all of the animations on the page.  I imagine this will be addressed soon.
 
+  * Slow to load for larger patterns and/or animations showing more time-steps
+     * Currently it generates the entire animation as part of loading the page.
+
   * 'Boundary' atoms (on cells) aren't shown.
      * if the definition of the animation specifies a N x M sized grid, then the animation will show a N+2 x M+2 sized grid.  That is, it shows a 'boundary' layer of cells around the edge of the grid.  The grid-lines for these cells fade out towards the edges.  It shows these because the updating for each cell takes into account the surrounding cells, and we want to show the cells surrounding the cells on the outside edges of the N x M grid.  However, if the pattern includes atoms any of those 'boundary' cells, they won't be shown on the grid or included in the update animation (i.e. not shown in the updateSquare).
      * however, the calculation of the state of the variable that represents the next grid state does factor into account all of the atoms, and if the 'hidden' atoms did create new atoms in the next moment, even though they won't be shown on the grid when that next state becomes the current state, those atoms will appear on the updateSquares.
@@ -141,6 +144,9 @@ Future work
         * currently it's hard-coded.  It should be a function of the grid-size.
      * possibly get it to display information about what it is showing, e.g. 'showing first N time steps'.
      * add a 'branch' operation to the sequencer, enabling tweens to run in parallel to the "mainline" tweens.  In the normal sequence, the current tweens must finish before the following tweens can start, but the tween on a branch run would run independently on this and there would be no tween depending on them to finish before they could start.
+     * make animations faster to load
+        * instead of generating entire animation at once, generate the animation for a single time-step at a time, generating the next one while the current one is running.
+        * instead of generating animation at page-load time, do it after the page has rendered.
 
   * planned future features
      * choose from a library of patterns which one to show evolution of 
@@ -191,10 +197,8 @@ Future work
        
      
   * to fix
-     * when it is displaying a larger grid, e.g. the 'gliderAndEater' animation, the updater arms are longer and it looks as if the updateSquare is appearing to the right of the hole where it should appear.
-     * the timeDisp backgrounds only have the correct size when the grids have the same number of rows as columns.
-     
-     
+     * the timeDisp backgrounds only have the correct size when the grids have the same number of rows as columns.  Looks particularly bad for wide (but not tall) patterns like Gosper Glider Gun.
+
   * refactoring - heaps of this to do, some misc items:
      * add an Atom class
      * move some of the global vars into the dispGol class.
