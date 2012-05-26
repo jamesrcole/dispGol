@@ -238,6 +238,7 @@ Notes:
             ***initially handle cases without comment lines, an without header line
 
             Details of RLE format: http://conwaylife.com/wiki/Run_Length_Encoded
+            and http://psoup.math.wisc.edu/mcell/ca_files_formats.html#RLE
         */
         this.calculatePosArray = function(patternRLE) {
 
