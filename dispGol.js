@@ -679,15 +679,13 @@ Notes:
             this.container.x = this.x;
             this.container.y = this.y;
 
-            this.container2 = new Container();
             this.activeBG = new Shape();
             this.activeBG.alpha = 0;
             this.activeBG.x = 0;
             this.activeBG.y = 0;
             this.activeBG.compositeOperation = "destination-over";
-            this.container2.addChild(this.activeBG);
-            this.container.addChild(this.container2);
-            // ^ without that container2, even though activeBG was the first thing being added, it was
+            this.container.addChild(this.activeBG);
+            
             //   drawing on top of the grid for some weird reason
 
 
@@ -701,16 +699,17 @@ Notes:
 
 
         drawActiveBG: function() {
+            var x = -this.getCellSize();
+            var y = -this.getCellSize();
+            var width  = this.getWidth()+(2*this.getCellSize());
+            var height = this.getHeight()+(2*this.getCellSize());
             this.activeBG.graphics
                 .beginFill("#CCFFB2")
-                .rect(
-                    -this.getCellSize(),
-                    -this.getCellSize(),
-                    this.getWidth()+(2*this.getCellSize()),
-                    this.getHeight()+(2*this.getCellSize())
-                )
+                .rect(x,y,width,height)
                 .endFill()
             ;
+            
+            this.activeBG.cache(x,y,width,height);
         },
                   
 
@@ -760,6 +759,16 @@ Notes:
             this.grid.graphics.endStroke();
 
             this._drawFadeOutGridLines(isSmall);
+
+
+
+            this.grid.cache(
+                -this.getCellSize(isSmall),
+                -this.getCellSize(isSmall),
+                endX+2*this.getCellSize(isSmall),
+                endY+2*this.getCellSize(isSmall)
+            );
+
 
         },
 
@@ -839,8 +848,16 @@ Notes:
                 var atomCenterY = y + (atomCellY*this.getCellSize(isSmall)) + (this.getCellSize(isSmall)/2);
 
                 var atom = new Shape();
+                var radius = this.getAtomRadius(isSmall);
                 atom.graphics.beginFill(this.atomFillStyle)
-                    .arc(atomCenterX,atomCenterY,this.getAtomRadius(isSmall),0,Math.PI*2,false).endFill();
+                    .arc(atomCenterX,atomCenterY,radius,0,Math.PI*2,false).endFill();
+
+                atom.cache(
+                    atomCenterX-radius,
+                    atomCenterY-radius,
+                    atomCenterX+radius,
+                    atomCenterY+radius
+                );
 
                 return atom;
             }
@@ -1009,6 +1026,9 @@ Notes:
             var h = w;
             if (this.backgroundColour == null) { this.backgroundcolour = nearWhite };
             background.graphics.beginFill(this.backgroundColour).rect(0,0,w,h).endFill();
+
+            background.cache(0,0,w,h);
+
             this.container.addChild(background);
 
 
@@ -1055,6 +1075,7 @@ Notes:
                 .rect(cellSize,cellSize,cellSize,cellSize)
                 .endStroke()
             ;
+            this.matchShape.cache(-1,-1,catchmentWidth+2,catchmentWidth+2);
 
             this.noMatchShape.graphics
                 .beginStroke(noMatchColour)
@@ -1062,16 +1083,18 @@ Notes:
                 .rect(cellSize,cellSize,cellSize,cellSize)
                 .endStroke()
             ;
-
+            this.noMatchShape.cache(-1,-1,catchmentWidth+2,catchmentWidth+2);
+                
 
             this.iccBounds = new Shape();
-
             this.iccBounds.graphics
                 .beginStroke("#000000")
                 .rect(0,0,catchmentWidth,catchmentWidth)
                 .rect(cellSize,cellSize,cellSize,cellSize)
                 .endStroke()
             ;
+            this.iccBounds.cache(-1,-1,catchmentWidth+2,catchmentWidth+2);
+
         },
 
 
@@ -1128,6 +1151,7 @@ Notes:
             var label = new Text(this.centralCount, "16px Arial", "#222222");
             label.x = gridTLCx + catchmentCenterCellX*this.getCellSize() + this.getCellSize()/2.5;
             label.y = gridTLCy + catchmentCenterCellY*this.getCellSize() + this.getCellSize()/1.5;
+
             return label;
         },
 
@@ -1141,6 +1165,7 @@ Notes:
             var label = new Text(this.catchmentCount, "16px Arial", "#222222");
             label.x = gridTLCx + (catchmentCenterCellX+1)*this.getCellSize() + this.getCellSize()/2.5;
             label.y = gridTLCy + (catchmentCenterCellY+1)*this.getCellSize() + this.getCellSize()/1.5;
+
             return label;
         },
 
@@ -1426,11 +1451,15 @@ Notes:
         this.activeBG.visible = false;
         this.activeBG.x = this.x+1;
         this.activeBG.y = this.y+1;
+        var activeBGWidth = this.width-2;
+        var activeBGHeight = this.height-2;
         this.activeBG.graphics
             .beginFill(activeBGColour)
-            .rect(0,0,this.width-2,this.height-2)
+            .rect(0,0,activeBGWidth,activeBGHeight)
             .endFill()
         ;
+
+        this.activeBG.cache(0,0,activeBGWidth,activeBGHeight);
 
 
         // temp measure!
@@ -1482,16 +1511,20 @@ Notes:
                 )
                 .endStroke().endFill()
             ;
+
+            hole.cache(-2,-2,this.holeDims.width+4,this.holeDims.height+4);
+
             this.updater.container.addChild(hole);
 
 
             var holeHorizShadowLine = new Shape();
             holeHorizShadowLine.x = this.x + this.armPadding;
             holeHorizShadowLine.y = this.y + this.armPadding;
+            holeHorizShadowLineWidth = this.threeSquareWidth;
             holeHorizShadowLine.graphics
                 .beginStroke("gray")
                 .moveTo(0,0)
-                .lineTo(this.threeSquareWidth,0)
+                .lineTo(holeHorizShadowLineWidth,0)
                 .endStroke()
             ;
             holeHorizShadowLine.shadow =
@@ -1502,16 +1535,20 @@ Notes:
                     shadowBlur
                 )
             ;
+            
+            holeHorizShadowLine.cache(0,0,holeHorizShadowLineWidth,shadowOffset+5);
+
             this.updater.container.addChild(holeHorizShadowLine);
 
 
             var holeVertShadowLine = new Shape();
             holeVertShadowLine.x = this.x + this.armPadding;
             holeVertShadowLine.y = this.y + this.armPadding;
+            holeVertShadowLineHeight = this.threeSquareWidth;
             holeVertShadowLine.graphics
                 .beginStroke("gray")
                 .moveTo(0,0)
-                .lineTo(0,this.threeSquareWidth)
+                .lineTo(0,holeVertShadowLineHeight)
                 .endStroke()
             ;
             holeVertShadowLine.shadow =
@@ -1522,6 +1559,9 @@ Notes:
                     shadowBlur
                 )
             ;
+
+            holeVertShadowLine.cache(0,0,shadowOffset+5,holeVertShadowLineHeight);
+
             this.updater.container.addChild(holeVertShadowLine);
 
 
@@ -1555,6 +1595,9 @@ Notes:
                     outerShadowBlur
                 )
             ;
+
+            bottomShadowLine.cache(0,0,this.width,outerShadowOffset+5);
+
             this.updater.container.addChild(bottomShadowLine);
 
 
@@ -1570,6 +1613,9 @@ Notes:
                 .lineTo(guideLinesWidth,this.holeDims.height)
                 .endStroke();
             ;
+
+            guideLines.cache(0,-4,guideLinesWidth+4,this.holeDims.height+8);
+
             this.updater.container.addChild(guideLines);
 
         }
@@ -1652,6 +1698,8 @@ Notes:
             .endStroke()
         ;
 
+        this.guideLines.cache(0,-4,this.guideLinesDims.width+4,this.guideLinesDims.height+8);
+        
 
 
 
@@ -1697,6 +1745,9 @@ Notes:
                 )
                 .endStroke().endFill()
             ;
+
+            hole.cache(-2,-2,this.cellHole.width+4,this.cellHole.width+4);
+
             this.updater.container.addChild(hole);
 
 
@@ -1716,10 +1767,11 @@ Notes:
             var holeHorizShadowLine = new Shape();
             holeHorizShadowLine.x = this.cellHole.x;
             holeHorizShadowLine.y = this.cellHole.y;
+            var holeHorizShadowLineWidth = this.cellHole.width;
             holeHorizShadowLine.graphics
                 .beginStroke("gray")
                 .moveTo(0,0)
-                .lineTo(this.cellHole.width,0)
+                .lineTo(holeHorizShadowLineWidth,0)
                 .endStroke()
             ;
             holeHorizShadowLine.shadow =
@@ -1730,16 +1782,20 @@ Notes:
                     shadowBlur
                 )
             ;
+
+            holeHorizShadowLine.cache(0,-4,holeHorizShadowLineWidth,8);
+
             this.updater.container.addChild(holeHorizShadowLine);
 
 
             var holeVertShadowLine = new Shape();
             holeVertShadowLine.x = this.cellHole.x;
             holeVertShadowLine.y = this.cellHole.y;
+            var holeVertShadowLineHeight = this.cellHole.width;
             holeVertShadowLine.graphics
                 .beginStroke("gray")
                 .moveTo(0,0)
-                .lineTo(0,this.cellHole.width)
+                .lineTo(0,holeVertShadowLineHeight)
                 .endStroke()
             ;
             holeVertShadowLine.shadow =
@@ -1750,6 +1806,9 @@ Notes:
                     shadowBlur
                 )
             ;
+
+            holeVertShadowLine.cache(-4,0,8,holeVertShadowLineHeight);
+
             this.updater.container.addChild(holeVertShadowLine);
 
 
@@ -1757,10 +1816,11 @@ Notes:
             var bottomShadowLine = new Shape();
             bottomShadowLine.x = this.x;
             bottomShadowLine.y = this.y2;
+            var bottomShadowLineWidth = this.width;
             bottomShadowLine.graphics
                 .beginStroke("gray")
                 .moveTo(0,0)
-                .lineTo(this.width,0)
+                .lineTo(bottomShadowLineWidth,0)
                 .endStroke()
             ;
             bottomShadowLine.shadow =
@@ -1771,8 +1831,10 @@ Notes:
                     outerShadowBlur
                 )
             ;
-            this.updater.container.addChild(bottomShadowLine);
 
+            bottomShadowLine.cache(0,-4,bottomShadowLineWidth,8);
+
+            this.updater.container.addChild(bottomShadowLine);
         }
 
         this.showActiveBGTween = function() {
@@ -1834,6 +1896,8 @@ Notes:
                 )
             ;
 
+            this.shape.cache(-4,-4,this.width+shadowOffset+8,this.height+shadowOffset+8);
+
             this.activePen.x = this.x;
             this.activePen.y = this.y;
             this.activePen.graphics
@@ -1841,6 +1905,8 @@ Notes:
                 .drawRoundRect(0,0,this.width,this.height,this.updater.roundedCnrRadius)
                 .endStroke()
             ;
+
+            this.activePen.cache(-4,-4,this.width+8,this.height+8);
 
         }
 
@@ -1912,6 +1978,8 @@ Notes:
                 .rect(1,1,this.width-2,this.height-2)
                 .endFill()
             ;
+            
+            this.activeBG.cache(-4,-4,this.width+8,this.height+8);
 
             this.shape.graphics
                 .beginStroke(this.updater.innerBoundaryColour)
@@ -1925,6 +1993,8 @@ Notes:
                 .lineTo(0,this.height-this.inToGap)
                 .endStroke();
             ;
+
+            this.shape.cache(-4,-4,this.width+8,this.height+8);
 
 
             var guideLines = new Shape();
@@ -1953,6 +2023,9 @@ Notes:
                 .lineTo(bottomGuideLineWidth,this.height)
                 .endStroke();
             ;
+
+            guideLines.cache(-4,-4,topGuideLineWidth+8,Math.max(this.height,this.updater.updateSquareWidth)+8);
+
             this.container.addChild(guideLines);
 
 
@@ -2005,6 +2078,7 @@ Notes:
                 .lineTo(this.x,this.y)
                 .endStroke()
             ;
+
         }
     }
 
@@ -2043,6 +2117,8 @@ Notes:
         draw: function() {
 
             this.container.visible = true;
+
+            // this.updateSquare.container.cache(-4,-4,this.updateSquare.width+8,this.updateSquare.height+8);
         }
 
     });
@@ -2169,14 +2245,16 @@ Notes:
                 .drawRoundRect(0,0,this.width,this.height,this.updater.roundedCnrRadius)
                 .endStroke()
             ;
-            this.shape.shadow = new 
-                Shadow(
+            this.shape.shadow =
+                new Shadow(
                     "black",
                     shadowOffset,
                     shadowOffset,
                     shadowBlur
                 )
             ;
+
+            this.shape.cache(-4,-4,this.width+8+shadowOffset,this.height+8+shadowOffset);
 
 
             this.activePen.x = this.x;
@@ -2188,6 +2266,8 @@ Notes:
                 .drawRoundRect(0,0,this.width,this.height,this.updater.roundedCnrRadius)
                 .endStroke()
             ;
+
+            this.activePen.cache(-4,-4,this.width+8,this.height+8);
 
         }
 
@@ -2309,6 +2389,9 @@ Notes:
                 .lineTo(0,0)
                 .endStroke();
             ;
+            this.currThreeSquareRow.draw(); // draws guidelines on matchComponent shape, so have 2do it b4 caching
+
+            this.shape.cache(-4,-4,this.width+8,this.height+8);
 
             this.activeBG.graphics
                 .beginFill(activeBGColour)
@@ -2316,8 +2399,9 @@ Notes:
                 .endFill()
             ;
 
+            this.activeBG.cache(-3,-3,this.width+6,this.height+6);
 
-            this.currThreeSquareRow.draw();
+
             this.atomInNextMomentConditionsRow.draw();
             this.pen.draw();
         }
@@ -2369,14 +2453,18 @@ Notes:
         this.crossBar = {
             x: point1.x,
             y: point1.y,
-            x2: point2.x
+            x2: point2.x,
+            width: null
         }
+        this.crossBar.width = this.crossBar.x2 - this.crossBar.x;
 
         this.sink = {
             x: this.crossBar.x + (this.crossBar.x2 - this.crossBar.x)/2,
             y: this.crossBar.y,
-            y2: updater.addAtomPen.y
+            y2: updater.addAtomPen.y,
+            height: null
         }
+        this.sink.height = this.sink.y2 - this.sink.y;
 
 
         // draws on updater's shape
@@ -2397,6 +2485,8 @@ Notes:
                 .lineTo(this.sink.x,this.sink.y2)
                 .endStroke()
             ;
+
+            this.shape.cache(this.crossBar.x-4,this.crossBar.y-4,this.crossBar.width+8,this.sink.height+8);
 
         }
 
@@ -2453,6 +2543,9 @@ Notes:
                 .beginFill("black")
                 .arc(0,this.height,this.endPointRadius,0,Math.PI*2,false)
                 .endFill()
+            ;
+
+            this.shape.cache(-4-this.endPointRadius/2,-4,8+this.endPointRadius,this.height+8+this.endPointRadius);
         }
 
         this.getMoveToOneTwoConditionTween = function(duration) {
@@ -2526,6 +2619,8 @@ Notes:
                 .endFill()
             ;
 
+            this.activeBG.cache(-3,-3,this.width+6,this.height+6);
+
             this.guideLines.graphics
                 .beginStroke(guideLinesColour)
                 .moveTo(0,0)
@@ -2534,6 +2629,8 @@ Notes:
                 .lineTo(this.guideLinesDims.width,this.guideLinesDims.height)
                 .endStroke()
             ;
+
+            this.guideLines.cache(-4,-4,this.guideLinesDims.width+8,this.guideLinesDims.height+8);
 
 
             this.shape.x = this.x;
@@ -2549,6 +2646,8 @@ Notes:
                 shadowOffset,
                 shadowBlur
             );
+
+            this.shape.cache(-4,-4,this.width+8+shadowOffset,this.height+8+shadowOffset);
 
         }
 
@@ -2595,6 +2694,9 @@ Notes:
                 .arc(this.radius,this.radius,this.radius,0,Math.PI*2,false)
                 .endFill()
             ;
+
+            this.shape.cache(-4,-4,this.radius*2+8,this.radius*2+8);
+
         }
 
         this.showTween = function() {
@@ -2716,6 +2818,14 @@ Notes:
                 new Shadow("black", outerShadowOffset, outerShadowOffset, outerShadowBlur)
             ;
             this.container.addChild(border);
+
+
+            // the following does not work!  it causes text labels not to be visible and the shadow to be 
+            // visible over the top of the timedisp shape!  text labels are drawn before this is called
+            // and i can't think of anything that could legitimately cause shadow to be above the thing it is
+            // a shadow of!
+            // i suspect this is an EaselJS bug.
+            // this.container.cache(-4,-4,this.width+8+outerShadowOffset,this.height+8+outerShadowOffset);
             
         }
 
@@ -2796,6 +2906,10 @@ Notes:
                 .rect(0,0,this.width+topTimeDisp.width,this.height)
                 .endStroke()
             ;
+
+            // like with trying to cache the TimeDisp container, this doesn't work
+            // makes it all completely disappear
+            // this.container.cache(-4,-4,this.width+8,this.height+8);
 
         }
 
@@ -2979,6 +3093,15 @@ Notes:
             this.addAtomPen.draw();
             this.newAtom.draw();
             this.bottomArm.draw();
+
+
+            this.shape.cache(
+                this.topArm.x-4,
+                this.updaterBody.y,
+                this.topArm.width+this.updaterBody.width+8+outerShadowOffset,
+                this.updaterBody.height+8+outerShadowOffset
+            );
+
         }
 
 
@@ -3365,6 +3488,9 @@ Notes:
             .arc(0 + this.radius/2,0 + this.radius/2,this.radius,0,Math.PI*2,false)
             .endFill()
         ;
+
+        this.shape.cache(-4,-4,this.radius*2+8,this.radius*2+8);
+
         this.updater.container.addChild(this.shape);
 
 

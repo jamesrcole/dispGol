@@ -1,5 +1,29 @@
 
 
+:Caching of DisplayObjects
+
+- It didn't work when I tried caching containers.  It really messed up the 
+  look of things.
+
+    - TimeDisp container
+    - CurrentMomentDisp
+    - AtomCondition (caching its assoc'd UpdateSquare container)
+
+  those things aren't cached at all. 
+
+  I suspect it's a bug in EaselJS.
+
+  If I got it working, I could cache the updateSquare container after 
+  the atoms in it have been counted.
+
+- Didn't cache text labels, as it's not clear where they are drawn in 
+  relation to their x,y coordinates (the x and y doesn't define their 
+  top lefthand corner, I think).
+
+- Not clear to me there's any performance gains from caching simple 
+  stuff like activeBGs and rects like pens.  Could it actually slow 
+  things down?
+
 
 :on being able to speed stuff up.
 
