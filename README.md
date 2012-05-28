@@ -71,6 +71,8 @@ The `pattern` attribute indicates which Game of Life pattern to show the updatin
       * `disintegratingPattern1`
       * `disintegratingPattern2`
       * `disintegratingPattern3`
+  * some examples where the evolution of a "random"-looking pattern results in some structure
+      * `StructureFromRandomness1`
   * [glider synthesis](http://conwaylife.com/wiki/Glider_synthesis)
       * `GliderSynthesisPentadecathlon`: glider synthesis of a [Pentadecathlon](http://conwaylife.com/wiki/Pentadecathlon). 
 

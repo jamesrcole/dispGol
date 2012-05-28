@@ -441,9 +441,25 @@ Notes:
         http://www.ericweisstein.com/encyclopedias/life/GliderSynthesis.html
         http://conwaylife.com/wiki/Pentadecathlon
         */
-        GliderSynthesisPentadecathlon: new Pattern('6bo$6bobo$6b2o2$3o$2bo$bo5b2o$8b2o$7bo!')
+        GliderSynthesisPentadecathlon: new Pattern('6bo$6bobo$6b2o2$3o$2bo$bo5b2o$8b2o$7bo!'),
 
-            
+
+        /*
+           e.g. of production of structures from 'random' patterns
+           ends up producing a single blinker. and everything but it dying 
+           out.
+            ....o
+            .o.o
+            oo.oo
+            ..oo
+            ....o
+            ...o
+
+            showing its evolution requires 12 steps
+            and a grid 6 wide and 9 high, with the pattern shown
+            above positioned in the grid's top left corner.
+        */
+        StructureFromRandomness1: new Pattern('4bo$bobo$2ob2o$2b2o$4bo$3bo!')
 
     };
 
