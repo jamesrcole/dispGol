@@ -135,9 +135,6 @@ Future work
 
 
   * other enhancements
-     * cache the display objects!
-        * to improve performance of animation on things like mobile devices
-        * also, labels in the match condition's seem to 'jiggle' when the updater moves.  Caching may help that.
      * add a way to increase the speed of the animation
         * e.g. so user can speed it up when the updater is processing an empty area on the grid.
      * add a way to jump time forwards by a certain amount, or to a certain grid position or to a certain timestep.
@@ -214,6 +211,8 @@ Change history
 --------------
 
 Current version 0.1
+
+  * 2012-05-28: added caching of the display objects (some exceptions, see technicalNotes.txt)
 
   * 2012-05-28: fixed problem with incorrect size of timeDisp backgrounds (shown behind the grids) only having the correct size when the grids had the same number of rows as columns.
 
