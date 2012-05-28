@@ -2678,8 +2678,8 @@ Notes:
 
 
         // hack to 'hard-code' these values here...
-        var gridWidth = gridRows*largeGridCellSize;
-        var gridHeight = gridCols*largeGridCellSize;
+        var gridWidth = gridCols*largeGridCellSize;
+        var gridHeight = gridRows*largeGridCellSize;
 
         // needs to be enough so that the updater arm never obscures the time text
         // refactoring: should really calculated it based on geometry of arm... ***

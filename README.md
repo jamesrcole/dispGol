@@ -199,8 +199,6 @@ Future work
            * allow the user to scroll back to see the full history of the grids and update calculations at each step.
        
      
-  * to fix
-     * the timeDisp backgrounds only have the correct size when the grids have the same number of rows as columns.  Looks particularly bad for wide (but not tall) patterns like Gosper Glider Gun.
 
   * refactoring - heaps of this to do, some misc items:
      * add an Atom class
@@ -216,6 +214,8 @@ Change history
 --------------
 
 Current version 0.1
+
+  * 2012-05-28: fixed problem with incorrect size of timeDisp backgrounds (shown behind the grids) only having the correct size when the grids had the same number of rows as columns.
 
   * 0.1 - 2012-05-12
      * really messy code: it started out just drawing static diagrams but then I realised an animation would be the best way to present the information so it evolved in that direction.  Having never done graphics/animation before, learnt how the drawing/animation library worked as I was writing the code, so it wasn't clear how to organise things as I was going along.
