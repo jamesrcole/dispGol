@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    
+        <title>dispGol - HTML Game of Life animations</title>
+        <link rel="stylesheet" type="text/css" href="css/screen.css" />
+
+        <script type="text/javascript" src="lib/jquery-1.7.2.js"></script>  
+        <script type="text/javascript" src="lib/prototypes.js"></script>
+        <script type="text/javascript" src="lib/easeljs-0.4.2.min.js"></script>
+        <script type="text/javascript" src="lib/tweenjs-0.2.0.min.js"></script>
+        <script type="text/javascript" src="lib/Ease.js"></script>
+
+        <script type="text/javascript" src="dispGol.js"></script>
+        
+    </head>
+
+    <body>
+
+        <div class="content">
+
+        <p><a href="../index.html">back</a></p>
+
+        <h1>dispGol - HTML Game of Life animations</h1>
+        <p>Include animations of Conway's Game of Life in web-pages. Instead of showing the usual evolution of the Game of Life board, it shows <i>how</i> the next state is calculated from the current
+            one.</p>
+
+        <p><a href="explanation.html">Click here for an explanation</a> of how the animation shows these calculations.</p>
+
+        <br />
+        <p><a href="http://github.com/jamesrcole/dispGol">view on github</a></p>
+
+        <h1>Example animation</h1>
+        <p>The following animation shows a representation of how the evolution of a glider pattern works.  It shows four timesteps, and runs for approximately 5 mins.</p>
+        <div class="dispGol" display="updater" pattern="TLglider" 
+            gridWidth="4" gridHeight="4" steps="4"></div>
+
+        <p>Requires recent version of Firefox or Safari, or Internet Explorer 9. If the animation doesn't display try with one of those browsers.</p>
+
+        <h1>Other examples</h1>
+        <ul>
+            <li>Still lifes
+                <ul>
+                    <li><a href="tub.html">Tub</a> (<a href="http://conwaylife.com/wiki/Tub">info</a>).</li>
+                </ul>
+            </li>
+            <li>Oscillators
+                <ul>
+                    <li><a href="blinker.html">Blinker</a> (<a href="http://conwaylife.com/wiki/Blinker">info</a>).</li>
+                    <li><a href="pulsar.html">Pulsar</a> (<a href="http://conwaylife.com/wiki/Pulsar">info</a>).</li>
+                    <li><a href="pentadecathlon.html">Pentadecathlon</a> (<a href="http://conwaylife.com/wiki/Pentadecathlon">info</a>).</li>
+                    <li><a href="octagon2.html">Octagon2</a> (<a href="http://conwaylife.com/wiki/Octagon_2">info</a>).</li>
+                </ul>
+            </li>
+            <li>Spaceships
+                <ul>
+                    <li><a href="glider.html">Glider</a> (<a href="http://conwaylife.com/wiki/Glider">info</a>)</li>
+                    <li><a href="LWSS.html">Lightweight Spaceship</a> (<a href="http://conwaylife.com/wiki/LWSS">info</a>).</li>
+                </ul>
+            </li>
+            <li>Guns
+                <ul>
+                    <li><a href="gosperGliderGun.html">GosperGliderGun</a> (<a href="http://conwaylife.com/wiki/Gosper_glider_gun">info</a>).</li>
+                </ul>
+            </li>
+            <li>Interacting patterns
+                <ul>
+                    <li><a href="gliderAndEater.html">Glider and Eater</a> (an <a href="http://conwaylife.com/wiki/Eater_5">Eater 5</a>, eating a glider).</li>
+                    <li><a href="queenBeeShuttle.html">QueenBeeShuttle</a> (<a href="http://conwaylife.com/wiki/Queen_bee_shuttle">info</a>).</li>
+                    <li><a href="kickbackReaction.html">KickbackReaction</a> (<a href="http://conwaylife.com/wiki/Kickback_reaction">info</a>).</li>
+                    <li><a href="P60Relay.html">P60Relay</a> (a glider shuttling between two pentadecathlons).
+                        <br /><b>WARNING</b>: at present this takes a LONG TIME to load.</li>
+                </ul>
+            </li>
+            <li>Some examples of patterns that just "disintegrate" into nothing
+                <ul>
+                    <li><a href="disintegratingPattern1.html">One</a></li>
+                    <li><a href="disintegratingPattern2.html">Two</a></li>
+                    <li><a href="disintegratingPattern3.html">Three</a></li>
+                </ul>
+            </li>
+            <li>Some examples where the evolution of a "random"-looking pattern results in some structure
+                <ul>
+                    <li><a href="structureFromRandomness1.html">One</a></li>
+                </ul>
+            </li>
+            <li><a href="http://conwaylife.com/wiki/Glider_synthesis">Glider synthesis</a>
+                <ul>
+                    <li><a href="gliderSynthesisPentadecathlon.html">Glider synthesis of a Pentadecathlon</a> (info: <a href="http://conwaylife.com/wiki/Pentadecathlon">Pentadecathlon</a>).</li> 
+                </ul>
+            </li>
+
+        </ul>
+
+        </div>
+
+        <br />
+        <br />
+
+        <p><small><small>background image courtesy of <a href="http://tiled-bg.blogspot.com.au/2012/04/subtle-textured-light-blue-background.html">Free Web Backgrounds</a></small></small></p>
+
+    </body>
+</html>
+
