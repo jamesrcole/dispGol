@@ -113,7 +113,39 @@ Limitations
 Future work
 -----------
 
-  * everything that happens when there's a match (to do with result pulse and new atom moving onto bottom grid) is too slow relative to the rest of the animation - speed it up.
+  * higest priority
+     * everything that happens when there's a match (to do with result pulse and new atom moving onto bottom grid) is too slow relative to the rest of the animation - speed it up.
+     * make animations faster to load
+        * instead of generating entire animation at once, generate the animation for a single time-step at a time, generating the next one while the current one is running.
+        * instead of generating animation at page-load time, do it after the page has rendered.
+     * a completely different type of animation that shows the updates for each cell in parallel.
+        * the current way the updating is shown takes far too long to animate even moderately sized boards - need to have something faster.
+        * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  How that could work:
+           * show an initial step where the grid is cut up into each of the 
+             3x3 squares, and then have a (much simpler) update process 
+             shown for each of these
+           * in the count process, show a '0' for no atom and a tally mark 
+             for each atom, and show these directly beside the 3x3 grid (to 
+             more easily see the relationship between the counts and the 
+             grid contents)
+             The central count in top half of square beside 3x3 grid, the 
+             catchment count in bottom half.
+           * then for the match process, just make each condition (0-III, 
+             I-II, I-III) just appear one at a time beside the counts, and 
+             then slide over it and highlight if they are the same. The 
+             idea is to make it easier to see the quantities and easier to 
+             visually recognise when there is a match.  If there's a match 
+             make a new atom appear
+           * then at the end 'stitch back together' the pieces to form the 
+             grid in the next state.
+           * I'd originally been hesitant to show the process in parallel 
+             as then the viewer can't see exactly what is going on, but I 
+             think it's probably ok as long as it is fully clear that all 
+             of the updating is just happening via that simple process 
+             operating on the 3x3 squares.
+           * allow the user to scroll back to see the full history of the grids and update calculations at each step.
+
+
   * possible enhancements to make meaning of the animation clearer
      * make matches more prominent
         * try making the updateSquare and the matching condition's backgrounds turn green when there's a match.
@@ -146,9 +178,6 @@ Future work
         * currently it's hard-coded.  It should be a function of the grid-size.
      * possibly get it to display information about what it is showing, e.g. 'showing first N time steps'.
      * add a 'branch' operation to the sequencer, enabling tweens to run in parallel to the "mainline" tweens.  In the normal sequence, the current tweens must finish before the following tweens can start, but the tween on a branch run would run independently on this and there would be no tween depending on them to finish before they could start.
-     * make animations faster to load
-        * instead of generating entire animation at once, generate the animation for a single time-step at a time, generating the next one while the current one is running.
-        * instead of generating animation at page-load time, do it after the page has rendered.
 
   * planned future features
      * choose from a library of patterns which one to show evolution of 
@@ -170,33 +199,6 @@ Future work
               atom, or let the user interactively choose the particular 
               atom to show it for.
         * similar diagrams, showing 'causal descendance'
-     * a completely different type of animation that shows the updates for each cell in parallel.
-        * the current way the updating is shown takes far too long to animate even moderately sized boards - need to have something faster.
-        * I think what is really needed is to, instead of showing the updating of cells in a serial fashion, show it in parallel.  How that could work:
-           * show an initial step where the grid is cut up into each of the 
-             3x3 squares, and then have a (much simpler) update process 
-             shown for each of these
-           * in the count process, show a '0' for no atom and a tally mark 
-             for each atom, and show these directly beside the 3x3 grid (to 
-             more easily see the relationship between the counts and the 
-             grid contents)
-             The central count in top half of square beside 3x3 grid, the 
-             catchment count in bottom half.
-           * then for the match process, just make each condition (0-III, 
-             I-II, I-III) just appear one at a time beside the counts, and 
-             then slide over it and highlight if they are the same. The 
-             idea is to make it easier to see the quantities and easier to 
-             visually recognise when there is a match.  If there's a match 
-             make a new atom appear
-           * then at the end 'stitch back together' the pieces to form the 
-             grid in the next state.
-           * I'd originally been hesitant to show the process in parallel 
-             as then the viewer can't see exactly what is going on, but I 
-             think it's probably ok as long as it is fully clear that all 
-             of the updating is just happening via that simple process 
-             operating on the 3x3 squares.
-           * allow the user to scroll back to see the full history of the grids and update calculations at each step.
-       
      
 
   * refactoring - heaps of this to do, some misc items:
