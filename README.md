@@ -218,6 +218,8 @@ Current version 0.1
 
   * 2012-05-28: fixed problem with incorrect size of timeDisp backgrounds (shown behind the grids) only having the correct size when the grids had the same number of rows as columns.
 
+  * 2012-05: added various new Game of Life pattern definitions
+
   * 0.1 - 2012-05-12
      * really messy code: it started out just drawing static diagrams but then I realised an animation would be the best way to present the information so it evolved in that direction.  Having never done graphics/animation before, learnt how the drawing/animation library worked as I was writing the code, so it wasn't clear how to organise things as I was going along.
 
