@@ -113,7 +113,7 @@ Limitations
 Future work
 -----------
 
-  * higest priority
+  * highest priority
      * everything that happens when there's a match (to do with result pulse and new atom moving onto bottom grid) is too slow relative to the rest of the animation - speed it up.
      * make animations faster to load
         * instead of generating entire animation at once, generate the animation for a single time-step at a time, generating the next one while the current one is running.
