@@ -95,8 +95,8 @@ This software is distributed under the [MIT License](http://opensource.org/licen
 Limitations
 -----------
 
-  * Requires recent version of Firefox or Safari, or Internet Explorer 9.
-     * Chrome doesn't render animation properly.  Current version of animation is too slow (skips frames) in Opera.  Earlier versions of Internet Explorer  don't have canvas support, and while there are workarounds for that I haven't investigated these.
+  * Requires recent version of Firefox, Safari or Chrome, or Internet Explorer 9.
+     * Most recent version of Chrome still doesn't render the shadows properly, but this is just a cosmetic issue and the animations are still quite viewable.  Earlier versions of Chrome had a more severe problem with rendering shadows, which obscured details of the anmation.  Current version of animation is too slow (skips frames) in Opera.  Earlier versions of Internet Explorer don't have canvas support, and while there are workarounds for that I haven't investigated these.
 
   * Only one animation can be included in each HTML page.
      * Based on my understanding of CreateJS, while the current version of it lets you have multiple independent animations on the one page, there isn't a way to toggle whether an animation is paused/playing without effecting all of the animations on the page.  I imagine this will be addressed soon.
