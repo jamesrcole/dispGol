@@ -144,7 +144,8 @@ Future work
              of the updating is just happening via that simple process 
              operating on the 3x3 squares.
            * allow the user to scroll back to see the full history of the grids and update calculations at each step.
-
+     * Add way to generate a conventional animation of a GoL pattern
+     * Add a way to generate a static diagram of the steps of the evolution of a GoL pattern.
 
   * possible enhancements to make meaning of the animation clearer
      * make matches more prominent
