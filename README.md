@@ -200,7 +200,16 @@ Future work
               atom, or let the user interactively choose the particular 
               atom to show it for.
         * similar diagrams, showing 'causal descendance'
-     
+        * a focus+context view, where part of the view is zoomed right out so 
+          the cells and the updater are quite small, and the other part of the 
+          view is zoomed right in on the updater and its operation.  The part 
+          of the view focusing on the updater would just show the bit of the 
+          board it is currently dealing with, to emphasise that it only has a 
+          view of the board of the size of a 3x3 square of cells.
+        * a view showing how the interaction of one pattern with another 
+          changes the evolution of that other pattern.
+          It would highlight which cells, at time T after the beginning of that 
+          interaction, are only there because of that interaction.
 
   * refactoring - heaps of this to do, some misc items:
      * add an Atom class
