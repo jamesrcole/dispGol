@@ -26,9 +26,13 @@ location to the HTML file):
     <script type="text/javascript" src="easeljs-0.4.2.min.js"></script>
     <script type="text/javascript" src="tweenjs-0.2.0.min.js"></script>
     <script type="text/javascript" src="Ease.js"></script>
-    <script type="text/javascript" src="dispGol.js"></script>
 
-`dispGol.js` generates the animation, making use of the code in the other files to do so.
+    <script type="text/javascript" src="dispGol.js"></script>
+    <script type="text/javascript" src="animPath.js"></script>
+    <script type="text/javascript" src="sequencer.js"></script>
+    <script type="text/javascript" src="updater.js"></script>
+
+The last four of these files contain the dispGol-specific code.
 
 Then in the `body` of your HTML file, include a `div` where you wish the 
 animation to be displayed:
