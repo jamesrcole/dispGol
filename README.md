@@ -222,7 +222,6 @@ Future work
      * rather than hard-coding tween durations for when items move between two positions, could have it calculate the duration based on the distance to be travelled.
         * this would enable things to move at a consistent speed.
      * instead of using separate shapes to make items appear to change colour, could perhaps use Filters.
-     * move the Sequencer and AnimPath classes out to their own file or files.
      * move GoL pattern definitions to a JSON file.  Put documentation of patterns in that file, and instead of describing these patterns in README.md, add means to generate markdown description of patterns from JSON file and link to that from README.md.
  
 
