@@ -2100,7 +2100,7 @@ Notes:
 
     /*
        Visual representation of one of the conditions under which central 
-       square in the 3x3 square will contain an atom in the next moment.
+       cell in the 3x3 square will contain an atom in the next moment.
      */
     var AtomCondition = Class.extend({
 
