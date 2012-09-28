@@ -856,7 +856,10 @@ Notes:
 
 
 
-
+    /**
+     * Iterates through 'outer' cell positions of 3x3 grid (i.e. does not visit central cell),
+     * starting from bottom-left corner and moving in a clockwise direction.
+     */
     function ClockwiseFromBLCCatchmentIterator(catchmentCenterCellX,catchmentCenterCellY) {
 
         this.catchmentCenterCellX = catchmentCenterCellX;
@@ -869,18 +872,22 @@ Notes:
 
             var next;
 
-            if (this.row == this.catchmentCenterCellY + 1) {
-                if (this.col == this.catchmentCenterCellX - 1) {
+            var isBottomRow   = ( this.row == this.catchmentCenterCellY + 1 );
+            var isMiddleRow   = ( this.row == this.catchmentCenterCellY );
+            var isLeftColumn  = ( this.col == this.catchmentCenterCellX - 1 );
+            var isRightColumn = ( this.col == this.catchmentCenterCellX + 1 );
+            if (isBottomRow) {
+                if (isLeftColumn) {
                     this.row = this.catchmentCenterCellY;
                 } else {
                     this.col--;
                 }
-            } else if (this.row == this.catchmentCenterCellY) {
-                if (this.col == this.catchmentCenterCellX - 1) {
+            } else if (isMiddleRow) {
+                if (isLeftColumn) {
                     this.row--;
                 }
-            } else {
-                if (this.col == this.catchmentCenterCellX + 1) {
+            } else { // top row
+                if (isRightColumn) {
                     this.row++;
                 } else {
                     this.col++;
@@ -899,7 +906,9 @@ Notes:
 
     }
 
-    /***
+    /**
+     * Iterates through grid positions, starting in top left, moving left-to-right, row-by-row.
+     *
      * Note this is diff to the version in the earlier files.  In those 
      * the first call to getNext would get you the second position!!!
      * so I'll need to update the code that refer to old version of it to work with new version!
