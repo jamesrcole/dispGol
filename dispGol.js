@@ -554,6 +554,9 @@ Notes:
     }
 
  
+
+
+
     var AbstractGrid = Class.extend({
 
         init: function(x,y,rows,cols,largeCellSize,smallCellSize,universe,timeStep) {
@@ -749,9 +752,13 @@ Notes:
             if atom's position isn't on the board, don't draw it
         */
         drawAtomInCell: function(x,y,atomCellX,atomCellY,isSmall) {
-            if ( atomCellX >= 0 && atomCellX < this.cols && atomCellY >= 0 && atomCellY < this.rows) {
-                var atomCenterX = x + (atomCellX*this.getCellSize(isSmall)) + (this.getCellSize(isSmall)/2);
-                var atomCenterY = y + (atomCellY*this.getCellSize(isSmall)) + (this.getCellSize(isSmall)/2);
+            var atomWithinBoard = 
+                ( atomCellX >= 0 && atomCellX < this.cols && atomCellY >= 0 && atomCellY < this.rows )
+            ;
+            if (atomWithinBoard) {
+                var cellSize = this.getCellSize(isSmall);
+                var atomCenterX = x + atomCellX*cellSize + cellSize/2;
+                var atomCenterY = y + atomCellY*cellSize + cellSize/2;
 
                 var atom = new Shape();
                 var radius = this.getAtomRadius(isSmall);
@@ -766,6 +773,26 @@ Notes:
                 );
 
                 return atom;
+            }
+            return null;
+        },
+
+
+        // new: added to try it out....
+        drawCellHighlighted: function(cellX,cellY,isSmall,highlightColour) {
+            var cellWithinBoard =
+                ( cellX >= 0 && cellX < this.cols && cellY >= 0 && cellY < this.rows )
+            ;
+            if (cellWithinBoard) {
+                var cellSize = this.getCellSize(isSmall);
+                var highlight = new Shape();
+                highlight.graphics
+                    .beginFill(highlightColour)
+                    .rect(cellX*cellSize + 1,cellY*cellSize + 1,cellSize - 2,cellSize - 2)
+                    .endFill()
+                ;
+                highlight.alpha = 0.5;
+                return highlight;
             }
             return null;
         },
