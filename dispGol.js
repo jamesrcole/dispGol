@@ -533,13 +533,21 @@ Notes:
             return influencedCells;
         }
 
-        this.neighbouringAtomCount = function(cell) {
-            var count = 0;
+
+        this.getNeighbouringAtoms = function(cell) {
             var neighbours = this.getNeighbours(cell);
+            var neighbouringAtoms = [];
             for (var i = 0; i < neighbours.length; i++) {
-                if ( this.hasAtom(neighbours[i]) ) count++;
+                // don't need to push a copy, do i?
+                if ( this.hasAtom(neighbours[i]) ) {
+                    neighbouringAtoms.push(neighbours[i]);
+                }
             }
-            return count;
+            return neighbouringAtoms;
+        }
+
+        this.neighbouringAtomCount = function(cell) {
+            return this.getNeighbouringAtoms(cell).length;
         }
 
         this.hasAtom = function(cell) {
@@ -567,6 +575,59 @@ Notes:
     }
 
  
+    var AtomParentOrChildRelations = Class.extend({
+
+        init: function() {
+
+            // each entry is the an array.  the position of the entry indicates what time moment it is for.
+            // e.g. entry for time 0 is the first entry in this array.
+            // each entry is an array of two arrays - the first is of the atom position, and the second is of
+            // its child or parent positions 
+            this._relationsForMoments = [];
+
+        },
+
+        /*
+         * Doesn't check whether relatedAtomPosition has already been entered.
+         */
+        addRelations: function(time,atomPosition,relatedAtomPosition) {
+            var relations = this._relationsForMoments[time];
+
+            // check if there's already an entry for that atom position
+            // and if not, create and add it
+            var found = false;
+            var i = 0;
+            for (; i < relations.length; i++) {
+                if ( relations[i][0].compareArrays(atomPosition) ) {
+                    found = true;
+                    break;
+                }
+            };
+            var entryForAtom;
+            if (found) {
+                entryForAtom = relations[i];
+            } else {
+                entryForAtom = [ atomPosition, [] ];
+                relations.push( entryForAtom );
+            }
+
+            entryForAtom[1].push(relatedAtomPosition);
+        },
+
+        /*
+         * Assumes a valid time.
+         */
+        getRelatedAtomPositions: function(time,atomPosition) {
+            var relations = this._relationsForMoments[time];
+            for (var i = 0; i < relations.length; i++) {
+                if ( relations[i][0].compareArrays(atomPosition) ) {
+                    return relations[i][1];
+                }
+            };
+            return [];
+        },
+
+    });
 
 
 

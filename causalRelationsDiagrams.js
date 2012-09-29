@@ -72,6 +72,7 @@
 
             stage.update();
 
+
             for (; timeStep < this.numSteps; timeStep++) {
 
                 topGridX += 170;
@@ -106,8 +107,6 @@
 
 
                 }
-
-
 
             }
         }
