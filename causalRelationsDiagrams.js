@@ -66,7 +66,7 @@
             stage.addChild(this.topGrid.container);
 
             var highlight;
-            highlight = this.topGrid.drawCellHighlighted(2,2,false,"lightgreen");
+            highlight = this.topGrid.drawCellHighlighted(2,2,false,"yellow");
             this.topGrid.container.addChild(highlight);
             
 

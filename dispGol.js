@@ -477,7 +477,6 @@ Notes:
         }
 
         this.next = function() {
-            this.time++;
             var newBoard = [];
             var influencedCells = this.getInfluencedCells();
             var cellCopy;
@@ -488,14 +487,28 @@ Notes:
                 if ( this.hasAtom(cell) ) {
                     if ( neighbourCount >= 2 && neighbourCount <= 3 ) {
                         newBoard.push( cellCopy );
+                        /* 
+                         * get all the cells that influenced it
+                         *      *for that we'll need to add a this.getNeighbouringAtoms(cell)*
+                         * for each of those
+                         *      this.snapshotDescendants.addCausalRelation(this.time,influencingAtom,cellCopy)
+                         *      [and later we'll also add ancestor relns]
+                         */
                     }
                 } else {
                     if ( neighbourCount == 3 ) {
                         newBoard.push( cellCopy );
+                        /*
+                         * same as above... need to turn it into a method
+                         *
+                         * addAtomInNextMoment(...)
+                         *
+                         */
                     }
                 }
             }
             this.board = newBoard;
+            this.time++;
         }
 
 
