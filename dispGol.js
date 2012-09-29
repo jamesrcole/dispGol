@@ -533,6 +533,9 @@ Notes:
             return containsSubArray(this.board,cell);
         }
 
+        /*
+         * this is really 'get neighbouring positions'
+         */
         this.getNeighbours = function(cell) {
             var neighbours = [];
             var x = cell[0];
@@ -963,6 +966,11 @@ Notes:
                 if (dispType.toUpperCase() == "UPDATER") {
                     var updaterAnimation = new UpdaterAnimation(this);
                     updaterAnimation.start();
+                }
+                else if (dispType.toUpperCase() == "CAUSALRELATIONS" ) {
+                    var causalRelationsDiagram = new CausalRelationsDiagram(this);
+                    causalRelationsDiagram.show();
+
                 } else {
                     alert("DispGol, ERROR: unrecognised @display: " + dispType);
                 }
