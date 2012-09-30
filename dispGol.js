@@ -607,12 +607,11 @@ Notes:
 
                 for (var j = 0; j < currentAtoms.length; j++) {
                     var currAtomPos = currentAtoms[j];
-                    descendantsByTime[t] =
-                        descendantsByTime[t].concat(
-                            // 't-1' coz its parent was in prev moment
-                            this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
-                        )
-                    ;
+                    addUniqueItems(
+                        descendantsByTime[t],
+                        // 't-1' coz its parent was in prev moment
+                        this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
+                    );
                 }
 
                 currentAtoms = descendantsByTime[t];

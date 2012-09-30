@@ -83,14 +83,14 @@
             var highlight;
 
             // hard-coding of selected atom
-            var selectedAtom = [0,1];
-            var selectedAtomTime = 0;
-            highlight = this.grids[0].drawCellHighlighted(selectedAtom[0],selectedAtom[1],false,"yellow");
-            this.grids[0].container.addChild(highlight);
+            var selectedAtom = [1,0];
+            var selectedAtomTime = 1;
+            highlight = this.grids[selectedAtomTime].drawCellHighlighted(selectedAtom[0],selectedAtom[1],false,"yellow");
+            this.grids[selectedAtomTime].container.addChild(highlight);
 
             var descendantsByTime = universe.getAtomsDescendants(selectedAtomTime,selectedAtom,this.numSteps-1);
 
-            for (int t = selectedAtomTime + 1; i < this.numSteps; i++) {
+            for (var t = selectedAtomTime + 1; t < this.numSteps; t++) {
 
                 var descendantAtoms = descendantsByTime[t];
                 for (var a = 0; a < descendantAtoms.length; a++) {
