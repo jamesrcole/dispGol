@@ -589,6 +589,41 @@ Notes:
             return neighbours;
         }
 
+
+        /*
+         * REFACTORING: note that in this param is called 'atomPos' whereas
+         * similar ones are called 'cell'
+         * @toTime - show descendants up until, and including, this moment in time
+         */
+        this.getAtomsDescendants = function(time,atomPos,toTime) {
+            
+            var descendantsByTime = [];
+            var currentAtoms = [atomPos];
+
+            // it's 'time + 1' coz first descendants of atom is in next moment
+            for (var t = time + 1; t <= toTime; t++) {
+
+                descendantsByTime[t] = [];
+
+                for (var j = 0; j < currentAtoms.length; j++) {
+                    var currAtomPos = currentAtoms[j];
+                    descendantsByTime[t] =
+                        descendantsByTime[t].concat(
+                            // 't-1' coz its parent was in prev moment
+                            this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
+                        )
+                    ;
+                }
+
+                currentAtoms = descendantsByTime[t];
+            }
+
+            return descendantsByTime;
+
+        }
+
+
+
     }
 
  

@@ -77,25 +77,31 @@
             }
 
 
-            var selectedAtom = [0,1];
+
+
+
+            var highlight;
 
             // hard-coding of selected atom
-            var highlight;
+            var selectedAtom = [0,1];
+            var selectedAtomTime = 0;
             highlight = this.grids[0].drawCellHighlighted(selectedAtom[0],selectedAtom[1],false,"yellow");
             this.grids[0].container.addChild(highlight);
-        
-            // hard-coded highlighting of children
-            var childAtoms = universe.snapshotChildren.getRelatedAtomPositions(0,selectedAtom);
-            for (var i = 0; i < childAtoms.length; i++) {
-                var childAtom = childAtoms[i];
-                highlight = this.grids[1].drawCellHighlighted(childAtom[0],childAtom[1],false,"green");
-                this.grids[1].container.addChild(highlight);
-            };
 
+            var descendantsByTime = universe.getAtomsDescendants(selectedAtomTime,selectedAtom,this.numSteps-1);
+
+            for (int t = selectedAtomTime + 1; i < this.numSteps; i++) {
+
+                var descendantAtoms = descendantsByTime[t];
+                for (var a = 0; a < descendantAtoms.length; a++) {
+                    var descendantAtom = descendantAtoms[a];
+                    highlight = this.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green");
+                    this.grids[t].container.addChild(highlight);
+                };
+            
+            }
 
             stage.update();
-
-
 
             
         }
