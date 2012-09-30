@@ -470,6 +470,11 @@ Notes:
 
         this.board = pattern;
 
+        this.boardSnapshots = [ this.board ];  // the state of the board at each moment
+
+        // for each moment, and each atom in it, its child atoms in following moment.
+        this.snapshotChildren = new AtomParentOrChildRelations();
+
         this.time = 0;
 
         this.getPattern = function() {
@@ -479,37 +484,49 @@ Notes:
         this.next = function() {
             var newBoard = [];
             var influencedCells = this.getInfluencedCells();
-            var cellCopy;
+            var causedAtom;
             for (var i = 0; i < influencedCells.length; i++) {
                 cell = influencedCells[i];
-                cellCopy = cell.slice(0);
+                causedAtom = cell.slice(0);
                 neighbourCount = this.neighbouringAtomCount(cell);
+
+                var causingAtoms;
+
                 if ( this.hasAtom(cell) ) {
                     if ( neighbourCount >= 2 && neighbourCount <= 3 ) {
-                        newBoard.push( cellCopy );
-                        /* 
-                         * get all the cells that influenced it
-                         *      *for that we'll need to add a this.getNeighbouringAtoms(cell)*
-                         * for each of those
-                         *      this.snapshotDescendants.addCausalRelation(this.time,influencingAtom,cellCopy)
-                         *      [and later we'll also add ancestor relns]
-                         */
+
+                        causingAtoms = [ cell ].concat( this.getNeighbouringAtoms(cell) );
+                        this._addCausedAtomAndCausalRelations(causingAtoms,causedAtom,newBoard);
+
                     }
                 } else {
                     if ( neighbourCount == 3 ) {
-                        newBoard.push( cellCopy );
-                        /*
-                         * same as above... need to turn it into a method
-                         *
-                         * addAtomInNextMoment(...)
-                         *
-                         */
+
+                        causingAtoms = this.getNeighbouringAtoms(cell);
+                        this._addCausedAtomAndCausalRelations(causingAtoms,causedAtom,newBoard);
+
                     }
                 }
             }
-            this.board = newBoard;
             this.time++;
+            this.board = newBoard;
+            this.boardSnapshots[this.time] = this.board;
         }
+
+
+        this._addCausedAtomAndCausalRelations = function(causingAtoms,causedAtom,newBoard) {
+            newBoard.push( causedAtom );
+            for (var i = 0; i < causingAtoms.length; i++) {
+
+                var causingAtom = causingAtoms[i];
+                this.snapshotChildren.addRelations(this.time,causingAtom,causedAtom);
+
+                // [and later we'll also add ancestor relns]... and remember for this 
+                // we don't use this.time but this.time + 1!
+                 
+            };                        
+        }
+
 
 
         this.getTime = function() {
@@ -589,9 +606,15 @@ Notes:
 
         /*
          * Doesn't check whether relatedAtomPosition has already been entered.
+         * If it has already, an additional entry for it will be added.
          */
         addRelations: function(time,atomPosition,relatedAtomPosition) {
             var relations = this._relationsForMoments[time];
+
+            if (relations ==  undefined) {
+                relations = [];
+                this._relationsForMoments[time] = relations;
+            }
 
             // check if there's already an entry for that atom position
             // and if not, create and add it

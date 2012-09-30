@@ -72,18 +72,15 @@
 
             stage.update();
 
-
             for (; timeStep < this.numSteps; timeStep++) {
 
                 topGridX += 170;
-
 
                 var notLastTimestep = timeStep < (this.numSteps - 1);
 
                 if (notLastTimestep) {
 
                     universe.next();
-
 
                     this.topGrid = 
                         new Grid(
@@ -104,11 +101,10 @@
 
                     stage.update();
 
-
-
                 }
-
             }
+            
+            debugger;
         }
 
 
