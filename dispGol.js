@@ -718,6 +718,21 @@ Notes:
             this.container = new Container();
             this.container.x = this.x;
             this.container.y = this.y;
+            this.container.ownerGrid = this;
+
+
+            // The purpose of this shape is a bit of a hack.  for the causal relations diagrams, 
+            // i'm detecting when the user clicks on a grid, by finding mouse clicks on the
+            // grid's container.  but it only registers clicks on something visible in the 
+            // container, so I've put this background in so that it will register a click 
+            // anywhere within the grid.
+            this.background = new Shape();
+            this.background.alpha = 0.01;
+            this.background.x = 0;
+            this.background.y = 0;
+            this.background.compositeOperation = "destination-over";
+            this.container.addChild(this.background);
+            
 
             this.activeBG = new Shape();
             this.activeBG.alpha = 0;
@@ -735,6 +750,21 @@ Notes:
             // ^ fcking weird... if i change that to 'addChild' the activeBG gets put in front of the grid.
 
 
+        },
+
+
+        drawBackground: function() {
+            var x = -this.getCellSize();
+            var y = -this.getCellSize();
+            var width  = this.getWidth()+(2*this.getCellSize());
+            var height = this.getHeight()+(2*this.getCellSize());
+            this.background.graphics
+                .beginFill("white")
+                .rect(x,y,width,height)
+                .endFill()
+            ;
+            
+            this.background.cache(x,y,width,height);
         },
 
 
@@ -776,6 +806,7 @@ Notes:
 
         drawGrid: function(isSmall) {
 
+            this.drawBackground();
             this.drawActiveBG();
 
             this.grid.graphics.moveTo(this.x,this.y).beginStroke("#000000");

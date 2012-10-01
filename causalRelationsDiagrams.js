@@ -82,6 +82,7 @@
                         timeStep
                     )
                 ;
+                this.grids[timeStep].container.name = "Grid container, time " + timeStep;
                 this.grids[timeStep].drawGrid();
                 this.grids[timeStep].drawPattern();
                 stage.addChild(this.grids[timeStep].container);
@@ -99,8 +100,6 @@
                 }
 
             }
-
-
 
 
 
@@ -135,11 +134,27 @@
     }
 
 
-
     function clickHandler(event) {
 
-        alert("a click: " + event);
+        var gridX,gridY;
+        var adjustment = 3; // just seems to need this for accuracy..
+        gridX = event.stageX - event.target.x - adjustment;
+        gridY = event.stageY - event.target.y - adjustment;
 
+        var cellPos;
+        cellPos = gridPixelPosToCellPos(gridX,gridY,event.target)
+
+
+    }
+
+
+    // REFACTORING this should probably go in the Grid's view.
+    function gridPixelPosToCellPos(x,y,container) {
+
+        xPos = Math.floor( x / container.ownerGrid.largeCellSize );
+        yPos = Math.floor( y / container.ownerGrid.largeCellSize );
+
+        return [xPos,yPos]
     }
     
 
