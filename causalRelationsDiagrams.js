@@ -1,7 +1,11 @@
 
-
+    // hack, so these details is accessible to click handler
+    var numSteps;
+    var causalRelationsDiagram;
 
     function CausalRelationsDiagram(dispGolDiv) {
+
+        causalRelationsDiagram = this;
 
         this.patternName = $(dispGolDiv).attr('pattern');
 
@@ -10,6 +14,7 @@
         }
 
         this.numSteps  = $(dispGolDiv).attr('steps');
+        numSteps = this.numSteps;
         var gridWidth  = $(dispGolDiv).attr('gridWidth'); // in number of cells
         var gridHeight = $(dispGolDiv).attr('gridHeight');
 
@@ -53,17 +58,17 @@
 
         this.show = function() {
 
-            var stage = new Stage(this.canvas);
+            this.stage = new Stage(this.canvas);
 
-            var universe = new Universe( patterns[this.patternName].getPattern_PosArray().clone() );
+            this.universe = new Universe( patterns[this.patternName].getPattern_PosArray().clone() );
 
-            this.drawDiagram(stage,universe);
+            this.drawDiagram();
 
 
         }
 
 
-        this.drawDiagram = function(stage,universe) {
+        this.drawDiagram = function() {
 
             var topGridX = this.betweenGridPadding + this.gridFadeOffEdging/2;
             topGridY = topGridX;
@@ -78,60 +83,42 @@
                         gridCols,
                         largeGridCellSize,
                         smallGridCellSize,
-                        universe,
+                        this.universe,
                         timeStep
                     )
                 ;
                 this.grids[timeStep].container.name = "Grid container, time " + timeStep;
                 this.grids[timeStep].drawGrid();
                 this.grids[timeStep].drawPattern();
-                stage.addChild(this.grids[timeStep].container);
+                this.stage.addChild(this.grids[timeStep].container);
 
                 //**
                 this.grids[timeStep].container.mouseEnabled = true;
                 this.grids[timeStep].container.onClick = clickHandler;
 
-                stage.update();
+                this.stage.update();
 
                 var notLastTimestep = timeStep < (this.numSteps - 1);
                 if (notLastTimestep) {
-                    universe.next();
+                    this.universe.next();
                     topGridX += this.grids[timeStep].getWidth(false) + this.betweenGridPadding + this.gridFadeOffEdging;
                 }
 
             }
 
-
-
-            var highlight;
-
-            // hard-coding of selected atom
-            var selectedAtom = [3,4];
-            var selectedAtomTime = 0;
-            highlight = this.grids[selectedAtomTime].drawCellHighlighted(selectedAtom[0],selectedAtom[1],false,"yellow");
-            this.grids[selectedAtomTime].container.addChild(highlight);
-
-            var descendantsByTime = universe.getAtomsDescendants(selectedAtomTime,selectedAtom,this.numSteps-1);
-
-            for (var t = selectedAtomTime + 1; t < this.numSteps; t++) {
-
-                var descendantAtoms = descendantsByTime[t];
-                for (var a = 0; a < descendantAtoms.length; a++) {
-                    var descendantAtom = descendantAtoms[a];
-                    highlight = this.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green");
-                    this.grids[t].container.addChild(highlight);
-                };
-            
-            }
-
-            stage.update();
-
             
         }
 
 
-
     }
+
+
+
+    var selectedAtomPos = [];
+    var selectedAtomTime;
+    var selectedAtomHighlight;
+    var descendantAtomsHighlights = []; 
+
 
 
     function clickHandler(event) {
@@ -141,8 +128,66 @@
         gridX = event.stageX - event.target.x - adjustment;
         gridY = event.stageY - event.target.y - adjustment;
 
-        var cellPos;
-        cellPos = gridPixelPosToCellPos(gridX,gridY,event.target)
+        var newSelectionCellPos;
+        newSelectionCellPos = gridPixelPosToCellPos(gridX,gridY,event.target)
+
+        var grid = event.target.ownerGrid;
+        var newSelectionTimeStep = grid.timeStep;
+
+
+        // remove highlighting of selected cell and descendants
+        for (var d = 0; d < descendantAtomsHighlights.length; d++) {
+            descendantAtomsHighlights[d].parent.removeChild(descendantAtomsHighlights[d]);
+        }
+        descendantAtomsHighlights = [];
+        if (selectedAtomHighlight != undefined) {
+            selectedAtomHighlight.parent.removeChild(selectedAtomHighlight);
+            selectedAtomHighlight = null;
+        }
+
+
+        // if clicked on a different cell
+        var differentCellPos = !selectedAtomPos.compareArrays(newSelectionCellPos);
+        if (differentCellPos || selectedAtomTime != newSelectionTimeStep) {
+
+            selectedAtomTime = newSelectionTimeStep;
+            selectedAtomPos  = newSelectionCellPos;
+
+
+            var highlight;
+
+            selectedAtomHighlight = 
+                grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow")
+            ;
+            grid.container.addChild(selectedAtomHighlight);
+
+            var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(selectedAtomTime,selectedAtomPos,numSteps-1);
+
+            for (var t = selectedAtomTime + 1; t < numSteps; t++) {
+
+                var descendantAtoms = descendantsByTime[t];
+                for (var a = 0; a < descendantAtoms.length; a++) {
+                    var descendantAtom = descendantAtoms[a];
+                    highlight = 
+                        causalRelationsDiagram.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green")
+                    ;
+                    if (highlight == null) debugger;
+                    descendantAtomsHighlights.push(highlight);
+                    causalRelationsDiagram.grids[t].container.addChild(highlight);
+                };
+            
+            }
+
+        
+        } else {
+
+            selectedAtomTime = -1;
+            selectedAtomPos  = [];
+
+        }
+
+
+        causalRelationsDiagram.stage.update();
 
 
     }
