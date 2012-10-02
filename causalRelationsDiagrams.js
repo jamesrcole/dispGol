@@ -115,7 +115,7 @@
 
 
     // these two indicate what the current selection is.  
-    var selectedAtomPos = [];   // empty array indicates no selected items
+    var selectedAtomPositions = [];
     var selectedAtomTime;       // value of -1 indicates no selected items
 
     var selectedAtomHighlight;
@@ -147,17 +147,25 @@
         }
     }
 
+
+    function createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid) {
+        for (var i = 0; i < selectedAtomPositions.length; i++) {
+            var atom = selectedAtomPositions[i];
+            createAndAddHighlightForSelectedAtom(atom,grid);
+        };
+    }
+
     function createAndAddHighlightForSelectedAtom(selectedAtomPos,grid) {
         selectedAtomHighlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
         grid.container.addChild(selectedAtomHighlight);
     }
 
 
-    function createAndAddHighlightsForAtomDescendants(selectedAtomPos,selectedAtomTime) {
+    function createAndAddHighlightsForAtomDescendants(atomPos,atomTime) {
 
-        var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(selectedAtomTime,selectedAtomPos,numSteps-1);
+        var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(atomTime,atomPos,numSteps-1);
 
-        for (var t = selectedAtomTime + 1; t < numSteps; t++) {
+        for (var t = atomTime + 1; t < numSteps; t++) {
 
             var highlight;
 
@@ -185,7 +193,6 @@
 
         var altKeyDown = event.nativeEvent.altKey;
         
-
         var grid = event.target.ownerGrid;
         var withinGridPixelPos = mouseClickEventToWithinGridPixelPos(event);
         var newSelectionCellPos  = gridPixelPosToCellPos(withinGridPixelPos[0],withinGridPixelPos[1],event.target);
@@ -199,19 +206,18 @@
 
         } else {
 
-            var differentCellPos = !selectedAtomPos.compareArrays(newSelectionCellPos);
+            var differentCellPos = !containsSubArray(selectedAtomPositions,newSelectionCellPos);
+
             var differentTime = (selectedAtomTime != newSelectionTimeStep);
             var clickedOnDifferentCell = (differentCellPos || differentTime);
 
             if (clickedOnDifferentCell) {
 
-                createAndAddHighlightForSelectedAtom(newSelectionCellPos,grid);
-                createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
-
-                selectedAtomPos = newSelectionCellPos;
-     
+                selectedAtomPositions = [ newSelectionCellPos ];
                 selectedAtomTime = newSelectionTimeStep;
-                 
+
+                createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
+                createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
 
             } else {
 
