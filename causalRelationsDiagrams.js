@@ -171,9 +171,11 @@
                     highlight = 
                         causalRelationsDiagram.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green")
                     ;
-                    if (highlight == null) debugger;
-                    descendantAtomsHighlights.push(highlight);
-                    causalRelationsDiagram.grids[t].container.addChild(highlight);
+                    // highlight will be null if the ancestor is positioned off the edge of the visible grid
+                    if (highlight != null) {
+                        descendantAtomsHighlights.push(highlight);
+                        causalRelationsDiagram.grids[t].container.addChild(highlight);
+                    }
                 };
             
             }
