@@ -940,7 +940,9 @@ Notes:
         },
 
 
-        // new: added to try it out....
+        /*
+         * If cell is outside visible bounds of grid, no highlight created and null returned.
+         */
         drawCellHighlighted: function(cellX,cellY,isSmall,highlightColour) {
             var cellWithinBoard =
                 ( cellX >= 0 && cellX < this.cols && cellY >= 0 && cellY < this.rows )

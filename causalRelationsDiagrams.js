@@ -114,28 +114,29 @@
 
 
 
-    var selectedAtomPos = [];
-    var selectedAtomTime;
+    // these two indicate what the current selection is.  
+    var selectedAtomPos = [];   // empty array indicates no selected items
+    var selectedAtomTime;       // value of -1 indicates no selected items
+
     var selectedAtomHighlight;
     var descendantAtomsHighlights = []; 
 
 
 
-    function clickHandler(event) {
 
-        var gridX,gridY;
+    function mouseClickEventToWithinGridPixelPos(event) {
+
+        var gridPixelX,gridPixelY;
         var adjustment = 3; // just seems to need this for accuracy..
-        gridX = event.stageX - event.target.x - adjustment;
-        gridY = event.stageY - event.target.y - adjustment;
+        gridPixelX = event.stageX - event.target.x - adjustment;
+        gridPixelY = event.stageY - event.target.y - adjustment;
 
-        var newSelectionCellPos;
-        newSelectionCellPos = gridPixelPosToCellPos(gridX,gridY,event.target)
+        return [gridPixelX,gridPixelY];
 
-        var grid = event.target.ownerGrid;
-        var newSelectionTimeStep = grid.timeStep;
+    }
 
 
-        // remove highlighting of selected cell and descendants
+    function removeHighlightingOfSelectedCellAndDescendants() {
         for (var d = 0; d < descendantAtomsHighlights.length; d++) {
             descendantAtomsHighlights[d].parent.removeChild(descendantAtomsHighlights[d]);
         }
@@ -144,50 +145,82 @@
             selectedAtomHighlight.parent.removeChild(selectedAtomHighlight);
             selectedAtomHighlight = null;
         }
+    }
+
+    function createAndAddHighlightForSelectedAtom(selectedAtomPos,grid) {
+        selectedAtomHighlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
+        grid.container.addChild(selectedAtomHighlight);
+    }
 
 
-        // if clicked on a different cell
-        var differentCellPos = !selectedAtomPos.compareArrays(newSelectionCellPos);
-        if (differentCellPos || selectedAtomTime != newSelectionTimeStep) {
+    function createAndAddHighlightsForAtomDescendants(selectedAtomPos,selectedAtomTime) {
 
-            selectedAtomTime = newSelectionTimeStep;
-            selectedAtomPos  = newSelectionCellPos;
+        var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(selectedAtomTime,selectedAtomPos,numSteps-1);
 
+        for (var t = selectedAtomTime + 1; t < numSteps; t++) {
 
             var highlight;
 
-            selectedAtomHighlight = 
-                grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow")
-            ;
-            grid.container.addChild(selectedAtomHighlight);
-
-            var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(selectedAtomTime,selectedAtomPos,numSteps-1);
-
-            for (var t = selectedAtomTime + 1; t < numSteps; t++) {
-
-                var descendantAtoms = descendantsByTime[t];
-                for (var a = 0; a < descendantAtoms.length; a++) {
-                    var descendantAtom = descendantAtoms[a];
-                    highlight = 
-                        causalRelationsDiagram.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green")
-                    ;
-                    // highlight will be null if the ancestor is positioned off the edge of the visible grid
-                    if (highlight != null) {
-                        descendantAtomsHighlights.push(highlight);
-                        causalRelationsDiagram.grids[t].container.addChild(highlight);
-                    }
-                };
-            
-            }
-
+            var descendantAtoms = descendantsByTime[t];
+            for (var a = 0; a < descendantAtoms.length; a++) {
+                var descendantAtom = descendantAtoms[a];
+                highlight = 
+                    causalRelationsDiagram.grids[t].drawCellHighlighted(descendantAtom[0],descendantAtom[1],false,"green")
+                ;
+                // highlight will be null if the ancestor is positioned off the edge of the visible grid
+                if (highlight != null) {
+                    descendantAtomsHighlights.push(highlight);
+                    causalRelationsDiagram.grids[t].container.addChild(highlight);
+                }
+            };
         
-        } else {
-
-            selectedAtomTime = -1;
-            selectedAtomPos  = [];
-
         }
 
+    }
+
+    /*
+     * At this point there may be 0, 1 or many selected cells (all within same grid).
+     */
+    function clickHandler(event) {
+
+        var altKeyDown = event.nativeEvent.altKey;
+        
+
+        var grid = event.target.ownerGrid;
+        var withinGridPixelPos = mouseClickEventToWithinGridPixelPos(event);
+        var newSelectionCellPos  = gridPixelPosToCellPos(withinGridPixelPos[0],withinGridPixelPos[1],event.target);
+        var newSelectionTimeStep = grid.timeStep;
+
+        removeHighlightingOfSelectedCellAndDescendants();
+
+
+        if (altKeyDown) {
+
+
+        } else {
+
+            var differentCellPos = !selectedAtomPos.compareArrays(newSelectionCellPos);
+            var differentTime = (selectedAtomTime != newSelectionTimeStep);
+            var clickedOnDifferentCell = (differentCellPos || differentTime);
+
+            if (clickedOnDifferentCell) {
+
+                createAndAddHighlightForSelectedAtom(newSelectionCellPos,grid);
+                createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
+
+                selectedAtomPos = newSelectionCellPos;
+     
+                selectedAtomTime = newSelectionTimeStep;
+                 
+
+            } else {
+
+                selectedAtomTime = -1;
+                selectedAtomPos  = [];
+
+            }
+
+        }
 
         causalRelationsDiagram.stage.update();
 
