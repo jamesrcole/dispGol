@@ -118,7 +118,7 @@
     var selectedAtomPositions = [];
     var selectedAtomTime;       // value of -1 indicates no selected items
 
-    var selectedAtomHighlight;
+    var selectedAtomHighlights = [];
     var descendantAtomsHighlights = []; 
 
 
@@ -141,10 +141,12 @@
             descendantAtomsHighlights[d].parent.removeChild(descendantAtomsHighlights[d]);
         }
         descendantAtomsHighlights = [];
-        if (selectedAtomHighlight != undefined) {
-            selectedAtomHighlight.parent.removeChild(selectedAtomHighlight);
-            selectedAtomHighlight = null;
+
+        for (var i = 0; i < selectedAtomHighlights.length; i++) {
+            var highlight = selectedAtomHighlights[i];
+            highlight.parent.removeChild(highlight);
         }
+        selectedAtomHighlights = [];
     }
 
 
@@ -156,8 +158,10 @@
     }
 
     function createAndAddHighlightForSelectedAtom(selectedAtomPos,grid) {
-        selectedAtomHighlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
-        grid.container.addChild(selectedAtomHighlight);
+        // ** is it really ok if position is off grid and highlight ends up null here?
+        var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
+        selectedAtomHighlights.push( highlight );
+        grid.container.addChild( highlight );
     }
 
 
