@@ -1,22 +1,8 @@
 
-    // hack, so these details is accessible to click handler
-    var numSteps;
-    var causalRelationsDiagram;
-
-
-    // these two indicate what the current selection is.  
-    var selectedAtomPositions = [];
-    var selectedAtomsTime = -1;       // value of -1 indicates no selected items
-
-    var selectedAtomHighlights = [];
-    var descendantAtomsHighlights = []; 
-
 
 
 
     function CausalRelationsDiagram(dispGolDiv) {
-
-        causalRelationsDiagram = this;
 
         this.patternName = $(dispGolDiv).attr('pattern');
 
@@ -25,7 +11,6 @@
         }
 
         this.numSteps  = $(dispGolDiv).attr('steps');
-        numSteps = this.numSteps;
         var gridWidth  = $(dispGolDiv).attr('gridWidth'); // in number of cells
         var gridHeight = $(dispGolDiv).attr('gridHeight');
 
@@ -61,7 +46,12 @@
         this.grids = [];
 
 
+        // these two indicate what the current selection is.  
+        this.selectedAtomPositions = [];
+        this.selectedAtomsTime = -1;       // value of -1 indicates no selected items
 
+        this.selectedAtomHighlights = [];
+        this.descendantAtomsHighlights = []; 
 
 
 
@@ -141,22 +131,22 @@
 
 
         this.removeHighlightingOfSelectedCellAndDescendants = function() {
-            for (var d = 0; d < descendantAtomsHighlights.length; d++) {
-                descendantAtomsHighlights[d].parent.removeChild(descendantAtomsHighlights[d]);
+            for (var d = 0; d < this.descendantAtomsHighlights.length; d++) {
+                this.descendantAtomsHighlights[d].parent.removeChild(this.descendantAtomsHighlights[d]);
             }
-            descendantAtomsHighlights = [];
+            this.descendantAtomsHighlights = [];
 
-            for (var i = 0; i < selectedAtomHighlights.length; i++) {
-                var highlight = selectedAtomHighlights[i];
+            for (var i = 0; i < this.selectedAtomHighlights.length; i++) {
+                var highlight = this.selectedAtomHighlights[i];
                 highlight.parent.removeChild(highlight);
             }
-            selectedAtomHighlights = [];
+            this.selectedAtomHighlights = [];
         }
 
 
-        this.createAndAddHighlightsForSelectedAtoms = function(selectedAtomPositions,grid) {
-            for (var i = 0; i < selectedAtomPositions.length; i++) {
-                var atom = selectedAtomPositions[i];
+        this.createAndAddHighlightsForSelectedAtoms = function(grid) {
+            for (var i = 0; i < this.selectedAtomPositions.length; i++) {
+                var atom = this.selectedAtomPositions[i];
                 this.createAndAddHighlightForSelectedAtom(atom,grid);
             };
         }
@@ -164,7 +154,7 @@
         this.createAndAddHighlightForSelectedAtom = function(selectedAtomPos,grid) {
             // ** is it really ok if position is off grid and highlight ends up null here?
             var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
-            selectedAtomHighlights.push( highlight );
+            this.selectedAtomHighlights.push( highlight );
             grid.container.addChild( highlight );
         }
 
@@ -174,12 +164,12 @@
          */ 
         this.addCellToSelection = function(newSelectionCellPos,newSelectionTimeStep,grid) {
 
-            selectedAtomPositions.push(newSelectionCellPos);
-            selectedAtomsTime = newSelectionTimeStep;
+            this.selectedAtomPositions.push(newSelectionCellPos);
+            this.selectedAtomsTime = newSelectionTimeStep;
 
-            this.createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
+            this.createAndAddHighlightsForSelectedAtoms(grid);
 
-            this.createAndAddHighlightsForMultipleAtomsDescendants(selectedAtomPositions,newSelectionTimeStep);
+            this.createAndAddHighlightsForMultipleAtomsDescendants(this.selectedAtomPositions,newSelectionTimeStep);
 
         }
 
@@ -192,21 +182,21 @@
 
             // Remove selectedCellPos from selectedAtomPositions.
             // remember that you can't use indexOf to find an array witin an array.
-            for (var i = 0; i < selectedAtomPositions.length; i++) {
-                if ( selectedAtomPositions[i].compareArrays(selectedCellPos) )  {
-                    selectedAtomPositions.splice(i,1);   
+            for (var i = 0; i < this.selectedAtomPositions.length; i++) {
+                if ( this.selectedAtomPositions[i].compareArrays(selectedCellPos) )  {
+                    this.selectedAtomPositions.splice(i,1);   
                     break;
                 }
             }
             
-            if (selectedAtomPositions.length > 0) {
+            if (this.selectedAtomPositions.length > 0) {
 
-                this.createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
+                this.createAndAddHighlightsForSelectedAtoms(grid);
 
-                this.createAndAddHighlightsForMultipleAtomsDescendants(selectedAtomPositions,selectionTimeStep);
+                this.createAndAddHighlightsForMultipleAtomsDescendants(this.selectedAtomPositions,selectionTimeStep);
      
             } else {
-                selectedAtomsTime = -1;
+                this.selectedAtomsTime = -1;
             }
         }
 
@@ -214,12 +204,12 @@
         this.addAndRegisterAtomHighlight = function(atomPos, time) {
 
             var highlight = 
-                causalRelationsDiagram.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,"green")
+                this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,"green")
             ;
             // highlight will be null if the ancestor is positioned off the edge of the visible grid
             if (highlight != null) {
-                descendantAtomsHighlights.push(highlight);
-                causalRelationsDiagram.grids[time].container.addChild(highlight);
+                this.descendantAtomsHighlights.push(highlight);
+                this.grids[time].container.addChild(highlight);
             }
 
         }
@@ -227,9 +217,9 @@
 
         this.createAndAddHighlightsForAtomDescendants = function(atomPos,atomTime) {
 
-            var descendantsByTime = causalRelationsDiagram.universe.getAtomsDescendants(atomTime,atomPos,numSteps-1);
+            var descendantsByTime = this.universe.getAtomsDescendants(atomTime,atomPos,this.numSteps-1);
 
-            for (var t = atomTime + 1; t < numSteps; t++) {
+            for (var t = atomTime + 1; t < this.numSteps; t++) {
 
                 var descendantAtoms = descendantsByTime[t];
                 for (var a = 0; a < descendantAtoms.length; a++) {
@@ -245,16 +235,16 @@
 
             // Get descendants for each of selected atom positions
             var descendantsForEachAtom = []; // each entry in this will be the descendants of an atom.
-            for (var i = 0; i < selectedAtomPositions.length; i++) {
-                atomPos = selectedAtomPositions[i];
+            for (var i = 0; i < this.selectedAtomPositions.length; i++) {
+                atomPos = this.selectedAtomPositions[i];
                 descendantsForEachAtom[i] = 
-                    causalRelationsDiagram.universe.getAtomsDescendants(newSelectionTimeStep,atomPos,numSteps-1)
+                    this.universe.getAtomsDescendants(newSelectionTimeStep,atomPos,this.numSteps-1)
                 ;
             }
 
             // Get the unique set of descendants for each moment in time to show
             var uniqueDescendantsForEachTimestep = [];
-            for (var timeStep = newSelectionTimeStep + 1; timeStep < numSteps; timeStep++) {
+            for (var timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
                 uniqueDescendantsForEachTimestep[timeStep] = [];
                 for (var atomIdx = 0; atomIdx < descendantsForEachAtom.length; atomIdx++) {
                     addUniqueItems( uniqueDescendantsForEachTimestep[timeStep], descendantsForEachAtom[atomIdx][timeStep] );
@@ -262,7 +252,7 @@
             }
 
             // Add and register these
-            for (timeStep = newSelectionTimeStep + 1; timeStep < numSteps; timeStep++) {
+            for (timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
                 var atomPositions = uniqueDescendantsForEachTimestep[timeStep];
                 for (var posIdx = 0; posIdx < atomPositions.length; posIdx++) {
                     var atomPos = atomPositions[posIdx];
@@ -274,8 +264,8 @@
 
         this.selectNothing = function() {
 
-            selectedAtomsTime = -1;
-            selectedAtomPositions = [];
+            this.selectedAtomsTime = -1;
+            this.selectedAtomPositions = [];
 
         }
 
@@ -285,10 +275,10 @@
          */
         this.selectCell = function(newSelectionCellPos,newSelectionTimeStep,grid) {
         
-            selectedAtomPositions = [ newSelectionCellPos ];
-            selectedAtomsTime = newSelectionTimeStep;
+            this.selectedAtomPositions = [ newSelectionCellPos ];
+            this.selectedAtomsTime = newSelectionTimeStep;
 
-            this.createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
+            this.createAndAddHighlightsForSelectedAtoms(grid);
             this.createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
 
         }
@@ -309,7 +299,7 @@
 
             this.removeHighlightingOfSelectedCellAndDescendants();
 
-            var clickedInDifferentGrid = ( selectedAtomsTime != -1 && selectedAtomsTime != newSelectionTimeStep );
+            var clickedInDifferentGrid = ( this.selectedAtomsTime != -1 && this.selectedAtomsTime != newSelectionTimeStep );
 
             if (altKeyDown) {
 
@@ -321,7 +311,7 @@
 
                 } else {
 
-                    var clickedOnASelectedCell = containsSubArray(selectedAtomPositions,newSelectionCellPos);
+                    var clickedOnASelectedCell = containsSubArray(this.selectedAtomPositions,newSelectionCellPos);
 
                     if (clickedOnASelectedCell) {
                         
@@ -337,9 +327,9 @@
 
             } else {  // alt key not held down - selecting cells one at a time
 
-                var noCurrentSelection     = (selectedAtomPositions.length == 0);
-                var multSelections         = (selectedAtomPositions.length > 1);
-                var clickedOnDifferentCell = !containsSubArray(selectedAtomPositions,newSelectionCellPos);
+                var noCurrentSelection     = (this.selectedAtomPositions.length == 0);
+                var multSelections         = (this.selectedAtomPositions.length > 1);
+                var clickedOnDifferentCell = !containsSubArray(this.selectedAtomPositions,newSelectionCellPos);
 
                 if (noCurrentSelection || multSelections || clickedInDifferentGrid || clickedOnDifferentCell) {
                     
@@ -356,7 +346,7 @@
 
             }
 
-            causalRelationsDiagram.stage.update();
+            this.stage.update();
 
         }
 
