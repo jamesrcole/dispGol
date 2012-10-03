@@ -190,6 +190,27 @@
 
     }
 
+
+
+    function selectNothing() {
+
+        selectedAtomTime = -1;
+        selectedAtomPos  = [];
+
+    }
+
+
+    function selectCell(newSelectionCellPos,newSelectionTimeStep,grid) {
+    
+        selectedAtomPositions = [ newSelectionCellPos ];
+        selectedAtomTime = newSelectionTimeStep;
+
+        createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
+        createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
+
+    }
+
+
     /*
      * At this point there may be 0, 1 or many selected cells (all within same grid).
      */
@@ -204,29 +225,48 @@
 
         removeHighlightingOfSelectedCellAndDescendants();
 
+        var clickedInDifferentGrid = (selectedAtomTime != newSelectionTimeStep);
 
         if (altKeyDown) {
 
+            if ( clickedInDifferentGrid ) {
 
-        } else {
+                // **this applies regardless of whether alt-key down or not... so should probably adjust logic structure
 
-            var differentCellPos = !containsSubArray(selectedAtomPositions,newSelectionCellPos);
-
-            var differentTime = (selectedAtomTime != newSelectionTimeStep);
-            var clickedOnDifferentCell = (differentCellPos || differentTime);
-
-            if (clickedOnDifferentCell) {
-
-                selectedAtomPositions = [ newSelectionCellPos ];
-                selectedAtomTime = newSelectionTimeStep;
-
-                createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
-                createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
+                selectNothing();
 
             } else {
 
-                selectedAtomTime = -1;
-                selectedAtomPos  = [];
+                var clickedOnASelectedCell = containsSubArray(selectedAtomPositions,newSelectionCellPos);
+
+                if (clickedOnASelectedCell) {
+                    
+                    // just remove that cell from the selection ****
+
+                } else {
+
+                    // add that cell to the selection ****
+                    
+                }
+            
+            }
+
+        } else {  // alt key not held down - selecting cells one at a time
+
+            var noCurrentSelection     = (selectedAtomPositions.length == 0);
+            var multSelections         = (selectedAtomPositions.length > 1);
+            var clickedOnDifferentCell = !containsSubArray(selectedAtomPositions,newSelectionCellPos);
+
+            if (noCurrentSelection || multSelections || clickedInDifferentGrid || clickedOnDifferentCell) {
+                
+                // In case of mult-selection, regardless of whether clicking within or 
+                // outside of selection, make selected cell the only selected cell.
+
+                selectCell(newSelectionCellPos,newSelectionTimeStep,grid);
+
+            } else {
+
+                selectNothing();
 
             }
 
@@ -234,6 +274,7 @@
 
         causalRelationsDiagram.stage.update();
 
+        debugger;
 
     }
 
