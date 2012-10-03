@@ -169,7 +169,7 @@
 
             this.createAndAddHighlightsForSelectedAtoms(grid);
 
-            this.createAndAddHighlightsForMultipleAtomsDescendants(this.selectedAtomPositions,newSelectionTimeStep);
+            this.createAndAddHighlightsForMultipleAtomsDescendants(newSelectionTimeStep);
 
         }
 
@@ -193,7 +193,7 @@
 
                 this.createAndAddHighlightsForSelectedAtoms(grid);
 
-                this.createAndAddHighlightsForMultipleAtomsDescendants(this.selectedAtomPositions,selectionTimeStep);
+                this.createAndAddHighlightsForMultipleAtomsDescendants(selectionTimeStep);
      
             } else {
                 this.selectedAtomsTime = -1;
@@ -231,7 +231,7 @@
         }
         
 
-        this.createAndAddHighlightsForMultipleAtomsDescendants = function(selectedAtomPositions,newSelectionTimeStep) {
+        this.createAndAddHighlightsForMultipleAtomsDescendants = function(newSelectionTimeStep) {
 
             // Get descendants for each of selected atom positions
             var descendantsForEachAtom = []; // each entry in this will be the descendants of an atom.
