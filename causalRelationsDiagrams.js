@@ -116,7 +116,7 @@
 
     // these two indicate what the current selection is.  
     var selectedAtomPositions = [];
-    var selectedAtomTime = -1;       // value of -1 indicates no selected items
+    var selectedAtomsTime = -1;       // value of -1 indicates no selected items
 
     var selectedAtomHighlights = [];
     var descendantAtomsHighlights = []; 
@@ -172,7 +172,7 @@
     function addCellToSelection(newSelectionCellPos,newSelectionTimeStep,grid) {
 
         selectedAtomPositions.push(newSelectionCellPos);
-        selectedAtomTime = newSelectionTimeStep;
+        selectedAtomsTime = newSelectionTimeStep;
 
         createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
 
@@ -203,7 +203,7 @@
             createAndAddHighlightsForMultipleAtomsDescendants(selectedAtomPositions,selectionTimeStep);
  
         } else {
-            selectedAtomTime = -1;
+            selectedAtomsTime = -1;
         }
     }
 
@@ -272,7 +272,7 @@
 
     function selectNothing() {
 
-        selectedAtomTime = -1;
+        selectedAtomsTime = -1;
         selectedAtomPositions = [];
 
     }
@@ -284,7 +284,7 @@
     function selectCell(newSelectionCellPos,newSelectionTimeStep,grid) {
     
         selectedAtomPositions = [ newSelectionCellPos ];
-        selectedAtomTime = newSelectionTimeStep;
+        selectedAtomsTime = newSelectionTimeStep;
 
         createAndAddHighlightsForSelectedAtoms(selectedAtomPositions,grid);
         createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
@@ -306,7 +306,7 @@
 
         removeHighlightingOfSelectedCellAndDescendants();
 
-        var clickedInDifferentGrid = ( selectedAtomTime != -1 && selectedAtomTime != newSelectionTimeStep );
+        var clickedInDifferentGrid = ( selectedAtomsTime != -1 && selectedAtomsTime != newSelectionTimeStep );
 
         if (altKeyDown) {
 
