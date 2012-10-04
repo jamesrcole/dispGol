@@ -295,11 +295,18 @@
                     this.addAndRegisterAtomHighlight( descendantPos, timeStep );
                 }
 
-                var commonDescendantPositions = commonDescendantsByTimestep[timeStep];
-                for (var posIdx = 0; posIdx < commonDescendantPositions.length; posIdx++) {
-                    var commonDescendantPos = commonDescendantPositions[posIdx];
-                    this.addAndRegisterAtomHighlight( commonDescendantPos, timeStep, "Orchid" );  
-                        // Purple and Orange also work ok.
+
+                // if only a single atom selected, don't use the special highlight for common-descendants
+                // strictly-speaking, this is wrong, but i think i'll be less confusing to user.
+                // ***LIMITATION: this is actually the number of cell selected. it could be greater
+                // than 1 but still only 1 of those selected cell contain an atom!
+                if (this.selectedAtomPositions.length > 1) {
+                    var commonDescendantPositions = commonDescendantsByTimestep[timeStep];
+                    for (var posIdx = 0; posIdx < commonDescendantPositions.length; posIdx++) {
+                        var commonDescendantPos = commonDescendantPositions[posIdx];
+                        this.addAndRegisterAtomHighlight( commonDescendantPos, timeStep, "Orchid" );  
+                            // Purple and Orange also work ok.
+                    }
                 }
 
             }
