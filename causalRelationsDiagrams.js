@@ -51,7 +51,7 @@
         this.selectedAtomsTime = -1;       // value of -1 indicates no selected items
 
         this.selectedAtomHighlights = [];
-        this.descendantAtomsHighlights = []; 
+        this.descendantAndAncestorHighlights = []; 
 
         this.ancestorColour = "Blue";
 
@@ -127,11 +127,11 @@
         }
 
 
-        this.removeHighlightingOfSelectedCellAndDescendants = function() {
-            for (var d = 0; d < this.descendantAtomsHighlights.length; d++) {
-                this.descendantAtomsHighlights[d].parent.removeChild(this.descendantAtomsHighlights[d]);
+        this.removeHighlightingOfSelectedCellAndItsAncestorsAndDescendants = function() {
+            for (var d = 0; d < this.descendantAndAncestorHighlights.length; d++) {
+                this.descendantAndAncestorHighlights[d].parent.removeChild(this.descendantAndAncestorHighlights[d]);
             }
-            this.descendantAtomsHighlights = [];
+            this.descendantAndAncestorHighlights = [];
 
             for (var i = 0; i < this.selectedAtomHighlights.length; i++) {
                 var highlight = this.selectedAtomHighlights[i];
@@ -205,7 +205,7 @@
             ;
             // highlight will be null if the ancestor is positioned off the edge of the visible grid
             if (highlight != null) {
-                this.descendantAtomsHighlights.push(highlight);
+                this.descendantAndAncestorHighlights.push(highlight);
                 this.grids[time].container.addChild(highlight);
             }
 
@@ -218,15 +218,13 @@
             // no parents for cells at time 0
             if (newSelectionTimeStep == 0) { return; }
 
-            var parents = this.snapshotParents.getRelatedAtomPositions(newSelectionTimeStep,newSelectionCellPos);
+            var parents = this.universe.snapshotParents.getRelatedAtomPositions(newSelectionTimeStep,newSelectionCellPos);
 
-            var previousMoment = newSelectionCellPos-1;
+            var previousMoment = newSelectionTimeStep-1;
             for (var i = 0; i < parents.length; i++) {
                 var atomPos = parents[i];
                 this.addAndRegisterAtomHighlight(atomPos,previousMoment,this.ancestorColour);
             }
-
-
         }
         
 
@@ -368,7 +366,7 @@
             var newSelectionCellPos  = this.gridPixelPosToCellPos(withinGridPixelPos[0],withinGridPixelPos[1],event.target);
             var newSelectionTimeStep = grid.timeStep;
 
-            this.removeHighlightingOfSelectedCellAndDescendants();
+            this.removeHighlightingOfSelectedCellAndItsAncestorsAndDescendants();
 
             var clickedInDifferentGrid = ( this.selectedAtomsTime != -1 && this.selectedAtomsTime != newSelectionTimeStep );
 
