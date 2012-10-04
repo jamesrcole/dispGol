@@ -201,10 +201,12 @@
         }
 
 
-        this.addAndRegisterAtomHighlight = function(atomPos, time) {
+        this.addAndRegisterAtomHighlight = function(atomPos,time,colour) {
+
+            if (colour == null) { colour = "green"; }
 
             var highlight = 
-                this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,"green")
+                this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,colour)
             ;
             // highlight will be null if the ancestor is positioned off the edge of the visible grid
             if (highlight != null) {
@@ -227,8 +229,35 @@
                 };
             
             }
-
         }
+
+
+        /**
+         * Note: the starting time-step maybe > 0, which means that the first
+         * relevant entry of the returned array will be at index > 0
+         */
+        this.getCommonDescendantsOfAtomsByTimestep = function(newSelectionTimeStep,descendantsForEachAtom) {
+
+            var commonDescendantsByTimestep = [];
+            for (var timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
+                for (var atomIdx = 0; atomIdx < descendantsForEachAtom.length; atomIdx++) {
+                    if (atomIdx == 0) {
+                        commonDescendantsByTimestep[timeStep] =
+                            descendantsForEachAtom[0][timeStep]
+                        ;
+                    } else {
+                        commonDescendantsByTimestep[timeStep] = 
+                            intersectArraysOfArrays(
+                                commonDescendantsByTimestep[timeStep],
+                                descendantsForEachAtom[atomIdx][timeStep]
+                            )
+                        ;
+                    }
+                }
+            }
+            return commonDescendantsByTimestep;
+        }
+
         
 
         this.createAndAddHighlightsForMultipleAtomsDescendants = function(newSelectionTimeStep) {
@@ -236,7 +265,7 @@
             // Get descendants for each of selected atom positions
             var descendantsForEachAtom = []; // each entry in this will be the descendants of an atom.
             for (var i = 0; i < this.selectedAtomPositions.length; i++) {
-                atomPos = this.selectedAtomPositions[i];
+                var atomPos = this.selectedAtomPositions[i];
                 descendantsForEachAtom[i] = 
                     this.universe.getAtomsDescendants(newSelectionTimeStep,atomPos,this.numSteps-1)
                 ;
@@ -251,13 +280,28 @@
                 }
             }
 
+            var commonDescendantsByTimestep = 
+                this.getCommonDescendantsOfAtomsByTimestep(newSelectionTimeStep,descendantsForEachAtom)
+            ;
+
+
             // Add and register these
             for (timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
-                var atomPositions = uniqueDescendantsForEachTimestep[timeStep];
-                for (var posIdx = 0; posIdx < atomPositions.length; posIdx++) {
-                    var atomPos = atomPositions[posIdx];
-                    this.addAndRegisterAtomHighlight( atomPos, timeStep )
+
+
+                var descendantPositions = uniqueDescendantsForEachTimestep[timeStep];
+                for (var posIdx = 0; posIdx < descendantPositions.length; posIdx++) {
+                    var descendantPos = descendantPositions[posIdx];
+                    this.addAndRegisterAtomHighlight( descendantPos, timeStep );
                 }
+
+                var commonDescendantPositions = commonDescendantsByTimestep[timeStep];
+                for (var posIdx = 0; posIdx < commonDescendantPositions.length; posIdx++) {
+                    var commonDescendantPos = commonDescendantPositions[posIdx];
+                    this.addAndRegisterAtomHighlight( commonDescendantPos, timeStep, "Orchid" );  
+                        // Purple and Orange also work ok.
+                }
+
             }
         }
 
@@ -273,7 +317,7 @@
         /**
          * select only this cell
          */
-        this.selectCell = function(newSelectionCellPos,newSelectionTimeStep,grid) {
+        this.selectSingleCell = function(newSelectionCellPos,newSelectionTimeStep,grid) {
         
             this.selectedAtomPositions = [ newSelectionCellPos ];
             this.selectedAtomsTime = newSelectionTimeStep;
@@ -307,7 +351,7 @@
 
                     // **this applies regardless of whether alt-key down or not... so should probably adjust logic structure
 
-                    this.selectCell(newSelectionCellPos,newSelectionTimeStep,grid);
+                    this.selectSingleCell(newSelectionCellPos,newSelectionTimeStep,grid);
 
                 } else {
 
@@ -336,7 +380,7 @@
                     // In case of mult-selection, regardless of whether clicking within or 
                     // outside of selection, make selected cell the only selected cell.
 
-                    this.selectCell(newSelectionCellPos,newSelectionTimeStep,grid);
+                    this.selectSingleCell(newSelectionCellPos,newSelectionTimeStep,grid);
 
                 } else {
 
@@ -347,6 +391,7 @@
             }
 
             this.stage.update();
+
 
         }
 
@@ -364,4 +409,21 @@
     }
 
 
+    // Where elements are compared using compareArrays
+    function intersectArraysOfArrays(array1,array2) {
+        /* cases to handle
+            - arrays may be of different lengths
+            - an array could be empty.
+        */
+        var intersection = [];
+        for (var a1 = 0; a1 < array1.length; a1++) {
+            for (var a2 = 0; a2 < array2.length; a2++) {
+                if (array1[a1].compareArrays(array2[a2])) {
+                    intersection.push(array1[a1]);
+                    break;
+                }
+            }
+        }
+        return intersection;
+    }
 
