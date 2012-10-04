@@ -409,6 +409,11 @@ Notes:
 
         ]),
 
+        /*
+         * showing its evolution requires
+         *  8x8 grid
+         *  and at least 5 timesteps
+         */
         Octagon2: new Pattern('3b2o3b$2bo2bo2b$bo4bob$o6bo$o6bo$bo4bob$2bo2bo2b$3b2o!'),
 
         QueenBeeShuttle: new Pattern('9bo12b$7bobo12b$6bobo13b$2o3bo2bo11b2o$2o4bobo11b2o$7bobo12b$9bo!'),
@@ -418,6 +423,12 @@ Notes:
         // requires a 16 x 19 grid to display its evolution properly
         Pentadecathlon: new Pattern('3$3b2bo4bo2b$3b2ob4ob2o$3b2bo4bo!'),
 
+        /*
+         * dimensions required to show its evolution (well, steps could be slightly less)
+         *   gridWidth  = "10" 
+         *   gridHeight = "5"
+         *   steps      = "12"
+         */ 
         KickbackReaction: new Pattern('5bo$6b2o$b2o2b2o$obo$2bo!'),
 
         /*
@@ -459,7 +470,17 @@ Notes:
             and a grid 6 wide and 9 high, with the pattern shown
             above positioned in the grid's top left corner.
         */
-        StructureFromRandomness1: new Pattern('4bo$bobo$2ob2o$2b2o$4bo$3bo!')
+        StructureFromRandomness1: new Pattern('4bo$bobo$2ob2o$2b2o$4bo$3bo!'),
+
+
+        /*
+         * showing its evolution requires these dimensions
+         *  x = 41
+         *  y = 33
+         */
+        Rectifier: new Pattern('bobo7bo29b$2b2o6bobo28b$2bo7bobo28b$11bo29b12$20b2o19b$20b2o19b2$2b2o37b$bobo37b$bo39b$2o39b$31b2o8b$30bo2bo2b2o3b$30bobo4bo3b$11b2o18bo5bob2o$10bobo21b2obobob$10bo23bo2bo2bo$9b2o20bo4bo2b2o$31b5o5b2$33b2obo4b$33bob2o!')
+        
+
 
     };
 
@@ -474,6 +495,8 @@ Notes:
 
         // for each moment, and each atom in it, its child atoms in following moment.
         this.snapshotChildren = new AtomParentOrChildRelations();
+        // for each moment, and each atom in it, its parent atoms in the previous moment.
+        this.snapshotParents  = new AtomParentOrChildRelations();
 
         this.time = 0;
 
@@ -517,14 +540,10 @@ Notes:
         this._addCausedAtomAndCausalRelations = function(causingAtoms,causedAtom,newBoard) {
             newBoard.push( causedAtom );
             for (var i = 0; i < causingAtoms.length; i++) {
-
                 var causingAtom = causingAtoms[i];
                 this.snapshotChildren.addRelations(this.time,causingAtom,causedAtom);
-
-                // [and later we'll also add ancestor relns]... and remember for this 
-                // we don't use this.time but this.time + 1!
-                 
-            };                        
+                this.snapshotParents.addRelations(this.time+1,causedAtom,causingAtom);
+            }                        
         }
 
 
@@ -613,12 +632,9 @@ Notes:
                         this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
                     );
                 }
-
                 currentAtoms = descendantsByTime[t];
             }
-
             return descendantsByTime;
-
         }
 
 
