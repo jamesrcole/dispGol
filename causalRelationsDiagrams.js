@@ -36,7 +36,8 @@
 
 
         var canvasHtml = 
-            "<canvas width='" + this.canvasWidth + "' height='" + this.canvasHeight + "'></canvas>"
+            "<canvas width='" + this.canvasWidth + "' height='" + this.canvasHeight + "' " +
+                     "style='background-color: white;'></canvas>"
         ;
         $(dispGolDiv).append(canvasHtml);
         this.canvas = $(dispGolDiv).children("canvas").first().get(0);
@@ -53,7 +54,11 @@
         this.selectedAtomHighlights = [];
         this.descendantAndAncestorHighlights = []; 
 
-        this.ancestorColour = "Blue";
+        this.selectedCellColour = "Gray";
+        this.ancestorColour = "#75ACFF"; // "LightBlue";
+        this.commonAncestorColour = "#0099FF";   // "Orchid";
+        this.descendantColour = "LightGreen";
+        this.commonDescendantColour = "#00E68A"; // "Orchid"; // Purple and Orange also work ok.
 
 
         this.show = function() {
@@ -149,7 +154,7 @@
 
         this.createAndAddHighlightForSelectedAtom = function(selectedAtomPos,grid) {
             // ** is it really ok if position is off grid and highlight ends up null here?
-            var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,"yellow");
+            var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,this.selectedCellColour);
             this.selectedAtomHighlights.push( highlight );
             grid.container.addChild( highlight );
         }
@@ -198,7 +203,7 @@
 
         this.addAndRegisterAtomHighlight = function(atomPos,time,colour) {
 
-            if (colour == null) { colour = "green"; }
+            if (colour == null) { colour = "Pink"; }
 
             var highlight = 
                 this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,colour)
@@ -220,7 +225,7 @@
             for (var t = atomTime + 1; t < this.numSteps; t++) {
                 var descendantAtoms = descendantsByTime[t];
                 for (var a = 0; a < descendantAtoms.length; a++) {
-                    this.addAndRegisterAtomHighlight( descendantAtoms[a], t );
+                    this.addAndRegisterAtomHighlight(descendantAtoms[a],t,this.descendantColour);
                 };
             }
         }
@@ -230,10 +235,10 @@
          * Note: the starting time-step maybe > 0, which means that the first
          * relevant entry of the returned array will be at index > 0
          */
-        this.getCommonDescendantsOfAtomsByTimestep = function(newSelectionTimeStep,descendantsForEachAtom) {
+        this.getCommonDescendantsOfAtomsByTimestep = function(atomTimeStep,descendantsForEachAtom) {
 
             var commonDescendantsByTimestep = [];
-            for (var timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
+            for (var timeStep = atomTimeStep + 1; timeStep < this.numSteps; timeStep++) {
                 for (var atomIdx = 0; atomIdx < descendantsForEachAtom.length; atomIdx++) {
                     if (atomIdx == 0) {
                         commonDescendantsByTimestep[timeStep] =
@@ -250,6 +255,29 @@
                 }
             }
             return commonDescendantsByTimestep;
+        }
+
+
+        this.getCommonAncestorsOfAtomsByTimestep = function(atomTimeStep,ancestorsForEachAtom) {
+
+            var commonAncestorsByTimestep = [];
+            for (var timeStep = atomTimeStep - 1; timeStep >= 0; timeStep--) {
+                for (var atomIdx = 0; atomIdx < ancestorsForEachAtom.length; atomIdx++) {
+                    if (atomIdx == 0) {
+                        commonAncestorsByTimestep[timeStep] =
+                            ancestorsForEachAtom[0][timeStep]
+                        ;
+                    } else {
+                        commonAncestorsByTimestep[timeStep] = 
+                            intersectArraysOfArrays(
+                                commonAncestorsByTimestep[timeStep],
+                                ancestorsForEachAtom[atomIdx][timeStep]
+                            )
+                        ;
+                    }
+                }
+            }
+            return commonAncestorsByTimestep;
         }
 
 
@@ -286,7 +314,7 @@
                 var descendantPositions = uniqueDescendantsByTimestep[timeStep];
                 for (var posIdx = 0; posIdx < descendantPositions.length; posIdx++) {
                     var descendantPos = descendantPositions[posIdx];
-                    this.addAndRegisterAtomHighlight( descendantPos, timeStep );
+                    this.addAndRegisterAtomHighlight(descendantPos,timeStep,this.descendantColour);
                 }
 
                 // if only a single atom selected, don't use the special highlight for common-descendants
@@ -297,8 +325,7 @@
                     var commonDescendantPositions = commonDescendantsByTimestep[timeStep];
                     for (var posIdx = 0; posIdx < commonDescendantPositions.length; posIdx++) {
                         var commonDescendantPos = commonDescendantPositions[posIdx];
-                        this.addAndRegisterAtomHighlight( commonDescendantPos, timeStep, "Orchid" );  
-                            // Purple and Orange also work ok.
+                        this.addAndRegisterAtomHighlight(commonDescendantPos,timeStep,this.commonDescendantColour);  
                     }
                 }
             }
@@ -321,13 +348,27 @@
 
 
 
-        this.addAndRegisterAncestorHighlights = function(newSelectionTimeStep,uniqueAncestorsByTimestep) {
+        this.addAndRegisterAncestorHighlights = function(newSelectionTimeStep,uniqueAncestorsByTimestep,commonAncestorsByTimestep) {
             for (timeStep = newSelectionTimeStep - 1; timeStep >= 0; timeStep--) {
+
                 var ancestorPositions = uniqueAncestorsByTimestep[timeStep];
                 for (var posIdx = 0; posIdx < ancestorPositions.length; posIdx++) {
                     var ancestorPos = ancestorPositions[posIdx];
                     this.addAndRegisterAtomHighlight(ancestorPos,timeStep,this.ancestorColour);
                 }
+
+                // if only a single atom selected, don't use the special highlight for common-ancestors
+                // strictly-speaking, this is wrong, but i think i'll be less confusing to user.
+                // ***LIMITATION: this is actually the number of cell selected. it could be greater
+                // than 1 but still only 1 of those selected cell contain an atom!
+                if (this.selectedAtomPositions.length > 1) {
+                    var commonAncestorPositions = commonAncestorsByTimestep[timeStep];
+                    for (var posIdx = 0; posIdx < commonAncestorPositions.length; posIdx++) {
+                        var commonAncestorPos = commonAncestorPositions[posIdx];
+                        this.addAndRegisterAtomHighlight(commonAncestorPos,timeStep,this.commonAncestorColour);  
+                    }
+                }
+
             } 
         }
 
@@ -363,7 +404,9 @@
 
             var uniqueAncestorsByTimestep = this.getUniqueAncestorsByTimestep(ancestorsForEachAtom,newSelectionTimeStep);
 
-            this.addAndRegisterAncestorHighlights(newSelectionTimeStep,uniqueAncestorsByTimestep);
+            var commonAncestorsByTimestep = this.getCommonAncestorsOfAtomsByTimestep(newSelectionTimeStep,ancestorsForEachAtom);
+
+            this.addAndRegisterAncestorHighlights(newSelectionTimeStep,uniqueAncestorsByTimestep,commonAncestorsByTimestep);
         }
 
 
