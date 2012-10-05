@@ -37,7 +37,7 @@
 
         var canvasHtml = 
             "<canvas width='" + this.canvasWidth + "' height='" + this.canvasHeight + "' " +
-                     "style='background-color: white;'></canvas>"
+                     "style='background-color: white; cursor: pointer;'></canvas>"
         ;
         $(dispGolDiv).append(canvasHtml);
         this.canvas = $(dispGolDiv).children("canvas").first().get(0);
