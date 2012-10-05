@@ -1,4 +1,12 @@
-canvas { border: solid black 2px; }
+canvas { 
+    border: solid black 3px;
+    background-color: white;
+}
+canvas:hover {
+    border: solid gray 3px;
+    background-color: WhiteSmoke;
+}
+
 body { 
     margin: auto;
     padding-top: 3em;

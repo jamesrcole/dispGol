@@ -37,7 +37,7 @@
 
         var canvasHtml = 
             "<canvas width='" + this.canvasWidth + "' height='" + this.canvasHeight + "' " +
-                     "style='background-color: white; cursor: pointer;'></canvas>"
+                       "style='cursor: pointer;'></canvas>"
         ;
         $(dispGolDiv).append(canvasHtml);
         this.canvas = $(dispGolDiv).children("canvas").first().get(0);
@@ -152,12 +152,6 @@
             };
         }
 
-        this.createAndAddHighlightForSelectedAtom = function(selectedAtomPos,grid) {
-            // ** is it really ok if position is off grid and highlight ends up null here?
-            var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,this.selectedCellColour);
-            this.selectedAtomHighlights.push( highlight );
-            grid.container.addChild( highlight );
-        }
 
         /*
          * Note: this assumes we're showing the ancestors and descendants for all
@@ -201,13 +195,20 @@
         }
 
 
+        this.createAndAddHighlightForSelectedAtom = function(selectedAtomPos,grid) {
+            var highlight = grid.drawCellHighlighted(selectedAtomPos[0],selectedAtomPos[1],false,this.selectedCellColour);
+            if (highlight != null) {
+                this.selectedAtomHighlights.push( highlight );
+                grid.container.addChild( highlight );
+            }
+        }
+        
         this.addAndRegisterAtomHighlight = function(atomPos,time,colour) {
 
             if (colour == null) { colour = "Pink"; }
 
-            var highlight = 
-                this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,colour)
-            ;
+            var highlight = this.grids[time].drawCellHighlighted(atomPos[0],atomPos[1],false,colour);
+
             // highlight will be null if the ancestor is positioned off the edge of the visible grid
             if (highlight != null) {
                 this.descendantAndAncestorHighlights.push(highlight);
