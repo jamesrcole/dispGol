@@ -7,7 +7,7 @@
         this.patternName = $(dispGolDiv).attr('pattern');
 
         if (patterns[this.patternName] == null) {
-            alert("UpdaterAnimation, ERROR: invalid @pattern: " + this.patternName);
+            alert("CausalRelations diagram, ERROR: invalid @pattern: " + this.patternName);
         }
 
         this.numSteps  = $(dispGolDiv).attr('steps');
@@ -20,7 +20,7 @@
         gridCols = gridWidth;
 
 
-        this.betweenGridPadding = 20;
+        this.betweenGridPadding = 15;
 
         this.gridFadeOffEdging = largeGridCellSize*1.5*2;
 
@@ -99,7 +99,7 @@
                 this.grids[timeStep].container.mouseEnabled = true;
 
 
-                thisCausalRelnsDiagram = this;
+                var thisCausalRelnsDiagram = this;
                 this.grids[timeStep].container.onClick = function(event) {
                     thisCausalRelnsDiagram.canvasClicked(event);
                 }
