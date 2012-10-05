@@ -92,11 +92,16 @@
                     )
                 ;
                 this.grids[timeStep].container.name = "Grid container, time " + timeStep;
+                this.grids[timeStep].container.mouseEnabled = true;
                 this.grids[timeStep].drawGrid();
                 this.grids[timeStep].drawPattern();
                 this.stage.addChild(this.grids[timeStep].container);
 
-                this.grids[timeStep].container.mouseEnabled = true;
+                var gridTimeText = new Text("time " + timeStep, "12px Arial", "Black");
+                gridTimeText.x = this.grids[timeStep].x + 5;
+                gridTimeText.y = this.grids[timeStep].y2 + largeGridCellSize + 3;
+                this.stage.addChild(gridTimeText);
+
 
 
                 var thisCausalRelnsDiagram = this;
