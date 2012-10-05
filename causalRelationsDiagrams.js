@@ -192,8 +192,8 @@
             if (this.selectedAtomPositions.length > 0) {
 
                 this.createAndAddHighlightsForSelectedAtoms(grid);
-
                 this.createAndAddHighlightsForMultipleAtomsDescendants(selectionTimeStep);
+                this.createAndAddHighlightsForMultipleAtomsAncestors(selectionTimeStep);
      
             } else {
                 this.selectedAtomsTime = -1;
@@ -309,7 +309,7 @@
         this.addAndRegisterDescendantHighlights = function(
                 newSelectionTimeStep,uniqueDescendantsByTimestep,commonDescendantsByTimestep) {
 
-            for (timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
+            for (var timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
 
                 var descendantPositions = uniqueDescendantsByTimestep[timeStep];
                 for (var posIdx = 0; posIdx < descendantPositions.length; posIdx++) {
@@ -349,7 +349,7 @@
 
 
         this.addAndRegisterAncestorHighlights = function(newSelectionTimeStep,uniqueAncestorsByTimestep,commonAncestorsByTimestep) {
-            for (timeStep = newSelectionTimeStep - 1; timeStep >= 0; timeStep--) {
+            for (var timeStep = newSelectionTimeStep - 1; timeStep >= 0; timeStep--) {
 
                 var ancestorPositions = uniqueAncestorsByTimestep[timeStep];
                 for (var posIdx = 0; posIdx < ancestorPositions.length; posIdx++) {
