@@ -56,7 +56,6 @@
         this.ancestorColour = "Blue";
 
 
-
         this.show = function() {
 
             this.stage = new Stage(this.canvas);
@@ -330,7 +329,7 @@
                     var ancestorPositions = ancestorsForEachAtom[i][timeStep];
                     for (var posIdx = 0; posIdx < ancestorPositions.length; posIdx++) {
                         var ancestorPos = ancestorPositions[posIdx];
-                        this.addAndRegisterAtomHighlight(ancestorPos,timeStep);
+                        this.addAndRegisterAtomHighlight(ancestorPos,timeStep,this.ancestorColour);
                     }
                 } 
             }
@@ -346,7 +345,7 @@
                     this.universe.getAtomsAncestors(atomsTimeStep,atomPos)
                 ;
             }
-            return descendantsForEachAtom;
+            return ancestorsForEachAtom;
         }
 
         // NEW
@@ -357,11 +356,8 @@
 
             var ancestorsForEachAtom = this.getAncestorsForAtoms([newSelectionCellPos],newSelectionTimeStep);
 
-            var previousMoment = newSelectionTimeStep-1;
-            for (var i = 0; i < ancestors.length; i++) {
-                var atomPos = ancestors[i];
-                this.addAndRegisterAtomHighlight(atomPos,previousMoment,this.ancestorColour);
-            }
+            this.addAndRegisterAncestorHighlights(newSelectionTimeStep,ancestorsForEachAtom);
+            
         }
 
 

@@ -644,8 +644,8 @@ Notes:
             var ancestorsByTime = [];
             var currentAtoms = [atomPos];
 
-            // it's 'time + 1' coz first ancestors of atom is in next moment
-            for (var t = time + 1; t <= toTime; t++) {
+            // it's 'time - 1' coz first ancestors of atom are in prev moment
+            for (var t = time - 1; t >= 0; t--) {
 
                 ancestorsByTime[t] = [];
 
@@ -653,8 +653,8 @@ Notes:
                     var currAtomPos = currentAtoms[j];
                     addUniqueItems(
                         ancestorsByTime[t],
-                        // 't-1' coz its parent was in prev moment
-                        this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
+                        // 't+1' we want to get the parents in this moment, of that atom in moment after
+                        this.snapshotParents.getRelatedAtomPositions(t+1,currAtomPos)
                     );
                 }
                 currentAtoms = ancestorsByTime[t];
