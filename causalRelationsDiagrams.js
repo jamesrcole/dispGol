@@ -444,6 +444,9 @@
             var newSelectionCellPos  = this.gridPixelPosToCellPos(withinGridPixelPos[0],withinGridPixelPos[1],event.target);
             var newSelectionTimeStep = grid.timeStep;
 
+            if (newSelectionCellPos[0] < 0 || newSelectionCellPos[1] < 0 || 
+                newSelectionCellPos[0] >= gridCols || newSelectionCellPos[1] >= gridRows) { return; }
+
             this.removeHighlightingOfSelectedCellAndItsAncestorsAndDescendants();
 
             var clickedInDifferentGrid = ( this.selectedAtomsTime != -1 && this.selectedAtomsTime != newSelectionTimeStep );
