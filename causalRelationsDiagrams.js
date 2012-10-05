@@ -232,80 +232,6 @@
         }
 
 
-        /**
-         * Note: the starting time-step maybe > 0, which means that the first
-         * relevant entry of the returned array will be at index > 0
-         */
-        this.getCommonDescendantsOfAtomsByTimestep = function(atomTimeStep,descendantsForEachAtom) {
-
-            var commonDescendantsByTimestep = [];
-            for (var timeStep = atomTimeStep + 1; timeStep < this.numSteps; timeStep++) {
-                for (var atomIdx = 0; atomIdx < descendantsForEachAtom.length; atomIdx++) {
-                    if (atomIdx == 0) {
-                        commonDescendantsByTimestep[timeStep] =
-                            descendantsForEachAtom[0][timeStep]
-                        ;
-                    } else {
-                        commonDescendantsByTimestep[timeStep] = 
-                            intersectArraysOfArrays(
-                                commonDescendantsByTimestep[timeStep],
-                                descendantsForEachAtom[atomIdx][timeStep]
-                            )
-                        ;
-                    }
-                }
-            }
-            return commonDescendantsByTimestep;
-        }
-
-
-        this.getCommonAncestorsOfAtomsByTimestep = function(atomTimeStep,ancestorsForEachAtom) {
-
-            var commonAncestorsByTimestep = [];
-            for (var timeStep = atomTimeStep - 1; timeStep >= 0; timeStep--) {
-                for (var atomIdx = 0; atomIdx < ancestorsForEachAtom.length; atomIdx++) {
-                    if (atomIdx == 0) {
-                        commonAncestorsByTimestep[timeStep] =
-                            ancestorsForEachAtom[0][timeStep]
-                        ;
-                    } else {
-                        commonAncestorsByTimestep[timeStep] = 
-                            intersectArraysOfArrays(
-                                commonAncestorsByTimestep[timeStep],
-                                ancestorsForEachAtom[atomIdx][timeStep]
-                            )
-                        ;
-                    }
-                }
-            }
-            return commonAncestorsByTimestep;
-        }
-
-
-        this.getDescendantsForAtoms = function(atomPositions,atomsTimeStep) {
-            var descendantsForEachAtom = []; // each entry in this will be the descendants of an atom.
-            for (var i = 0; i < atomPositions.length; i++) {
-                var atomPos = atomPositions[i];
-                descendantsForEachAtom[i] = 
-                    this.universe.getAtomsDescendants(atomsTimeStep,atomPos,this.numSteps-1)
-                ;
-            }
-            return descendantsForEachAtom;
-        }
-        
-
-        this.getUniqueDescendantsByTimestep = function(descendantsForEachAtom,atomsTimeStep) {
-            var uniqueDescendantsByTimestep = [];
-            for (var timeStep = atomsTimeStep + 1; timeStep < this.numSteps; timeStep++) {
-                uniqueDescendantsByTimestep[timeStep] = [];
-                for (var atomIdx = 0; atomIdx < descendantsForEachAtom.length; atomIdx++) {
-                    addUniqueItems( uniqueDescendantsByTimestep[timeStep], descendantsForEachAtom[atomIdx][timeStep] );
-                }
-            }
-            return uniqueDescendantsByTimestep;
-        }
-
-
 
         this.addAndRegisterDescendantHighlights = function(
                 newSelectionTimeStep,uniqueDescendantsByTimestep,commonDescendantsByTimestep) {
@@ -336,14 +262,15 @@
 
         this.createAndAddHighlightsForMultipleAtomsDescendants = function(newSelectionTimeStep) {
 
-            var descendantsForEachAtom = this.getDescendantsForAtoms(this.selectedAtomPositions,newSelectionTimeStep);
-
-            var uniqueDescendantsByTimestep = this.getUniqueDescendantsByTimestep(descendantsForEachAtom,newSelectionTimeStep);
-
-            var commonDescendantsByTimestep = 
-                this.getCommonDescendantsOfAtomsByTimestep(newSelectionTimeStep,descendantsForEachAtom)
+            var descendantsForEachAtom = 
+                this.universe.getDescendantsForAtoms(this.selectedAtomPositions,newSelectionTimeStep,this.numSteps)
             ;
-
+            var uniqueDescendantsByTimestep =
+                this.universe.getUniqueDescendantsByTimestep(descendantsForEachAtom,newSelectionTimeStep,this.numSteps)
+            ;
+            var commonDescendantsByTimestep = 
+                this.universe.getCommonDescendantsOfAtomsByTimestep(newSelectionTimeStep,descendantsForEachAtom,this.numSteps)
+            ;
             this.addAndRegisterDescendantHighlights(newSelectionTimeStep,uniqueDescendantsByTimestep,commonDescendantsByTimestep);
         }
 
@@ -375,38 +302,19 @@
 
 
 
-        this.getAncestorsForAtoms = function(atomPositions,atomsTimeStep) {
-            var ancestorsForEachAtom = []; // each entry in this will be the ancestors of an atom.
-            for (var i = 0; i < atomPositions.length; i++) {
-                var atomPos = atomPositions[i];
-                ancestorsForEachAtom[i] = 
-                    this.universe.getAtomsAncestors(atomsTimeStep,atomPos)
-                ;
-            }
-            return ancestorsForEachAtom;
-        }
-
-
-        this.getUniqueAncestorsByTimestep = function(ancestorsForEachAtom,atomsTimeStep) {
-            var uniqueAncestorsByTimestep = [];
-            for (var timeStep = atomsTimeStep - 1; timeStep >= 0; timeStep--) {
-                uniqueAncestorsByTimestep[timeStep] = [];
-                for (var atomIdx = 0; atomIdx < ancestorsForEachAtom.length; atomIdx++) {
-                    addUniqueItems(uniqueAncestorsByTimestep[timeStep], ancestorsForEachAtom[atomIdx][timeStep]);
-                }
-            }
-            return uniqueAncestorsByTimestep;
-        }
 
 
         this.createAndAddHighlightsForMultipleAtomsAncestors = function(newSelectionTimeStep) {
 
-            var ancestorsForEachAtom = this.getAncestorsForAtoms(this.selectedAtomPositions,newSelectionTimeStep);
-
-            var uniqueAncestorsByTimestep = this.getUniqueAncestorsByTimestep(ancestorsForEachAtom,newSelectionTimeStep);
-
-            var commonAncestorsByTimestep = this.getCommonAncestorsOfAtomsByTimestep(newSelectionTimeStep,ancestorsForEachAtom);
-
+            var ancestorsForEachAtom =
+                this.universe.getAncestorsForAtoms(this.selectedAtomPositions,newSelectionTimeStep)
+            ;
+            var uniqueAncestorsByTimestep = 
+                this.universe.getUniqueAncestorsByTimestep(ancestorsForEachAtom,newSelectionTimeStep)
+            ;
+            var commonAncestorsByTimestep = 
+                this.universe.getCommonAncestorsOfAtomsByTimestep(newSelectionTimeStep,ancestorsForEachAtom)
+            ;
             this.addAndRegisterAncestorHighlights(newSelectionTimeStep,uniqueAncestorsByTimestep,commonAncestorsByTimestep);
         }
 
@@ -515,22 +423,4 @@
 
     }
 
-
-    // Where elements are compared using compareArrays
-    function intersectArraysOfArrays(array1,array2) {
-        /* cases to handle
-            - arrays may be of different lengths
-            - an array could be empty.
-        */
-        var intersection = [];
-        for (var a1 = 0; a1 < array1.length; a1++) {
-            for (var a2 = 0; a2 < array2.length; a2++) {
-                if (array1[a1].compareArrays(array2[a2])) {
-                    intersection.push(array1[a1]);
-                    break;
-                }
-            }
-        }
-        return intersection;
-    }
 
