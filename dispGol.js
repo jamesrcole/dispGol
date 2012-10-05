@@ -613,6 +613,8 @@ Notes:
          * REFACTORING: note that in this param is called 'atomPos' whereas
          * similar ones are called 'cell'
          * @toTime - show descendants up until, and including, this moment in time
+         * REFACTORING: can get rid of toTime param, as universe itself knows what it has
+         * currently calculated up to.
          */
         this.getAtomsDescendants = function(time,atomPos,toTime) {
             
@@ -637,6 +639,28 @@ Notes:
             return descendantsByTime;
         }
 
+
+        this.getAtomsAncestors = function(time,atomPos) {
+            var ancestorsByTime = [];
+            var currentAtoms = [atomPos];
+
+            // it's 'time + 1' coz first ancestors of atom is in next moment
+            for (var t = time + 1; t <= toTime; t++) {
+
+                ancestorsByTime[t] = [];
+
+                for (var j = 0; j < currentAtoms.length; j++) {
+                    var currAtomPos = currentAtoms[j];
+                    addUniqueItems(
+                        ancestorsByTime[t],
+                        // 't-1' coz its parent was in prev moment
+                        this.snapshotChildren.getRelatedAtomPositions(t-1,currAtomPos)
+                    );
+                }
+                currentAtoms = ancestorsByTime[t];
+            }
+            return ancestorsByTime;
+        }
 
 
     }

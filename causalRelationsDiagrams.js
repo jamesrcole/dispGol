@@ -166,6 +166,7 @@
 
             this.createAndAddHighlightsForSelectedAtoms(grid);
             this.createAndAddHighlightsForMultipleAtomsDescendants(newSelectionTimeStep);
+            // this.createAndAddHighlightsForMultipleAtomsAncestors(newSelectionTimeStep);
         }
 
 
@@ -212,21 +213,6 @@
         }
 
 
-        // NEW
-        this.createAndAddHighlightForAtomParents = function(newSelectionCellPos,newSelectionTimeStep) {
-
-            // no parents for cells at time 0
-            if (newSelectionTimeStep == 0) { return; }
-
-            var parents = this.universe.snapshotParents.getRelatedAtomPositions(newSelectionTimeStep,newSelectionCellPos);
-
-            var previousMoment = newSelectionTimeStep-1;
-            for (var i = 0; i < parents.length; i++) {
-                var atomPos = parents[i];
-                this.addAndRegisterAtomHighlight(atomPos,previousMoment,this.ancestorColour);
-            }
-        }
-        
 
         this.createAndAddHighlightsForAtomDescendants = function(atomPos,atomTime) {
 
@@ -293,18 +279,9 @@
 
 
 
-        this.createAndAddHighlightsForMultipleAtomsDescendants = function(newSelectionTimeStep) {
+        this.addAndRegisterDescendantHighlights = function(
+                newSelectionTimeStep,uniqueDescendantsByTimestep,commonDescendantsByTimestep) {
 
-            var descendantsForEachAtom = this.getDescendantsForAtoms(this.selectedAtomPositions,newSelectionTimeStep);
-
-            var uniqueDescendantsByTimestep = this.getUniqueDescendantsByTimestep(descendantsForEachAtom,newSelectionTimeStep);
-
-            var commonDescendantsByTimestep = 
-                this.getCommonDescendantsOfAtomsByTimestep(newSelectionTimeStep,descendantsForEachAtom)
-            ;
-
-
-            // Add and register these
             for (timeStep = newSelectionTimeStep + 1; timeStep < this.numSteps; timeStep++) {
 
                 var descendantPositions = uniqueDescendantsByTimestep[timeStep];
@@ -325,8 +302,79 @@
                             // Purple and Orange also work ok.
                     }
                 }
-
             }
+        }
+
+
+
+        this.createAndAddHighlightsForMultipleAtomsDescendants = function(newSelectionTimeStep) {
+
+            var descendantsForEachAtom = this.getDescendantsForAtoms(this.selectedAtomPositions,newSelectionTimeStep);
+
+            var uniqueDescendantsByTimestep = this.getUniqueDescendantsByTimestep(descendantsForEachAtom,newSelectionTimeStep);
+
+            var commonDescendantsByTimestep = 
+                this.getCommonDescendantsOfAtomsByTimestep(newSelectionTimeStep,descendantsForEachAtom)
+            ;
+
+            this.addAndRegisterDescendantHighlights(newSelectionTimeStep,uniqueDescendantsByTimestep,commonDescendantsByTimestep);
+
+        }
+
+
+
+        this.addAndRegisterAncestorHighlights = function(newSelectionTimeStep,ancestorsForEachAtom) {
+
+            for (var i = 0; i < ancestorsForEachAtom.length; i++) {
+                for (timeStep = newSelectionTimeStep - 1; timeStep >= 0; timeStep--) {
+                    var ancestorPositions = ancestorsForEachAtom[i][timeStep];
+                    for (var posIdx = 0; posIdx < ancestorPositions.length; posIdx++) {
+                        var ancestorPos = ancestorPositions[posIdx];
+                        this.addAndRegisterAtomHighlight(ancestorPos,timeStep);
+                    }
+                } 
+            }
+        }
+
+
+
+        this.getAncestorsForAtoms = function(atomPositions,atomsTimeStep) {
+            var ancestorsForEachAtom = []; // each entry in this will be the ancestors of an atom.
+            for (var i = 0; i < atomPositions.length; i++) {
+                var atomPos = atomPositions[i];
+                ancestorsForEachAtom[i] = 
+                    this.universe.getAtomsAncestors(atomsTimeStep,atomPos)
+                ;
+            }
+            return descendantsForEachAtom;
+        }
+
+        // NEW
+        this.createAndAddHighlightForAtomAncestors = function(newSelectionCellPos,newSelectionTimeStep) {
+
+            // no ancestors for cells at time 0
+            if (newSelectionTimeStep == 0) { return; }
+
+            var ancestorsForEachAtom = this.getAncestorsForAtoms([newSelectionCellPos],newSelectionTimeStep);
+
+            var previousMoment = newSelectionTimeStep-1;
+            for (var i = 0; i < ancestors.length; i++) {
+                var atomPos = ancestors[i];
+                this.addAndRegisterAtomHighlight(atomPos,previousMoment,this.ancestorColour);
+            }
+        }
+
+
+        this.createAndAddHighlightsForMultipleAtomsAncestors = function(newSelectionTimeStep) {
+
+            var ancestorsForEachAtom = this.getAncestorsForAtoms(this.selectedAtomPositions,newSelectionTimeStep);
+
+
+            // can filter out duplicates later
+            // and change the add/register stuff to use the unique sets
+
+            this.addAndRegisterAncestorHighlights(newSelectionTimeStep,ancestorsForEachAtom);
+
         }
 
 
@@ -348,7 +396,7 @@
 
             this.createAndAddHighlightsForSelectedAtoms(grid);
             this.createAndAddHighlightsForAtomDescendants(newSelectionCellPos,newSelectionTimeStep);
-            this.createAndAddHighlightForAtomParents(newSelectionCellPos,newSelectionTimeStep);
+            this.createAndAddHighlightForAtomAncestors(newSelectionCellPos,newSelectionTimeStep);
 
         }
         
