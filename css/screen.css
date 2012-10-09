@@ -1,10 +1,10 @@
 canvas { 
     border: solid black 3px;
-    background-color: white;
+    background-color: WhiteSmoke;
 }
 canvas:hover {
     border: solid gray 3px;
-    background-color: WhiteSmoke;
+    background-color: white;
 }
 
 body { 
