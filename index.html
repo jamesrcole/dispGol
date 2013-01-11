@@ -14,8 +14,9 @@
         <script type="text/javascript" src="dispGol.js"></script>
         <script type="text/javascript" src="animPath.js"></script>
         <script type="text/javascript" src="sequencer.js"></script>
+
         <script type="text/javascript" src="updater.js"></script>
-        
+        <script type="text/javascript" src="causalRelationsDiagrams.js"></script>        
     </head>
 
     <body>
@@ -24,23 +25,28 @@
 
         <p><a href="../index.html">back</a></p>
 
-        <h1>dispGol - HTML Game of Life animations</h1>
-        <p>Include animations of Conway's Game of Life in web-pages. Instead of showing the usual evolution of the Game of Life board, it shows <i>how</i> the next state is calculated from the current
-            one.</p>
+        <h1>dispGol - HTML Game of Life visualisations</h1>
 
-        <p><a href="explanation.html">Click here for an explanation</a> of how the animation shows these calculations.</p>
+        <p>Visualise the causality at work in Conway's Game of Life.  Provides two types of visualisations.</p>
+                
+        <p>The <i>Updater</i> visualisations are animations of how the Game of Life rules are applied to produce the next moment's configuration.  That is, instead of showing the usual evolution of the Game of Life board, it shows <i>how</i> the next state is calculated from the current one.</p> 
+
+        <p>The <i>Causal Relations</i> visualisations are interactive diagrams that show the causal relationships between states in different moments.</p>
 
         <br />
         <p><a href="http://github.com/jamesrcole/dispGol">view on github</a></p>
 
-        <h1>Example animation</h1>
+        <h1>Example Updater animation</h1>
         <p>The following animation shows a representation of how the evolution of a glider pattern works.  It shows four timesteps, and runs for approximately 5 mins.</p>
+
+        <p><a href="explanation.html">Click here for an explanation</a> of how the animation shows these calculations.</p>
+        
         <div class="dispGol" display="updater" pattern="TLglider" 
             gridWidth="4" gridHeight="4" steps="4"></div>
 
         <p>Requires recent version of Firefox or Safari, or Internet Explorer 9. If the animation doesn't display try with one of those browsers.</p>
 
-        <h1>Other examples</h1>
+        <h2>Other Updater examples</h2>
         <ul>
             <li>Still lifes
                 <ul>
@@ -96,6 +102,30 @@
             </li>
 
         </ul>
+
+
+        <h1>Example Causal Relations diagram</h1>
+
+        <p>Click on cells to select them.  Hold down ALT key while clicking to select multiple cells.</p>
+        <p>Key
+            <ul>
+                <li>ancestors are shaded light-blue</li>
+                <li>common-ancestors in bright-blue</li>
+                <li>descendants are shaded light-green</li>
+                <li>common-descendants in bright-green</li>
+            </ul>
+        </p>
+
+
+        <div class     = "dispGol"
+            display    = "causalRelations"
+            pattern    = "TLglider"
+            gridWidth  = "5" 
+            gridHeight = "5"
+            steps      = "5"
+            >
+        </div>
+
 
         </div>
 
