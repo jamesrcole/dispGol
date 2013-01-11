@@ -5,11 +5,11 @@ Ways of visualising causality in Conway's Game of Life.  Two types of visualisat
 
 What the Updater visualisations look like ([watch a live example](http://jamesrcole.github.com/dispGol/)):
 
-![screenshot of an Updater visualisation](img/updaterScreenshot.png)
+![screenshot of an Updater visualisation](http://github.com/jamesrcole/dispGol/raw/master/img/updaterScreenshot.png)
 
 What the Causal Relations visualisations look like ([see a live example](http://jamesrcole.github.com/dispGol/)):
 
-![screenshot of an Causal Relations visualisation](img/causalRelationsScreenshot.png)
+![screenshot of an Causal Relations visualisation](http://github.com/jamesrcole/dispGol/raw/master/img/causalRelationsScreenshot.png)
 
 None of the visualisations are hard-coded.  They're generated from a definition of a Game of Life pattern, and dispGol can generate visualisations for any supplied pattern.
 
